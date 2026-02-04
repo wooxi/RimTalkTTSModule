@@ -14,6 +14,7 @@ namespace RimTalk.TTS.UI
     {
         private readonly Pawn _pawn;
         private string _selectedVoiceId;
+        private string _customLanguage;
         private Vector2 _scrollPos = Vector2.zero;
         private readonly TTSSettings _settings;
         private readonly List<VoiceModel> _voiceModels;
@@ -40,6 +41,7 @@ namespace RimTalk.TTS.UI
             }
             
             _selectedVoiceId = GetCurrentVoiceModel();
+            _customLanguage = GetCurrentLanguage();
 
             doCloseX = true;
             draggable = true;
@@ -49,7 +51,7 @@ namespace RimTalk.TTS.UI
             preventCameraMotion = false;
         }
 
-        public override Vector2 InitialSize => new Vector2(500f, 450f);
+        public override Vector2 InitialSize => new Vector2(500f, 520f);
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -65,7 +67,7 @@ namespace RimTalk.TTS.UI
 
             // Voice model list
             float listTop = instructRect.yMax + 10f;
-            float listHeight = inRect.height - listTop - 50f;
+            float listHeight = inRect.height - listTop - 120f; // Reserve space for language section and buttons
             Rect listOutRect = new Rect(inRect.x, listTop, inRect.width, listHeight);
 
             // Calculate content height
@@ -120,8 +122,28 @@ namespace RimTalk.TTS.UI
 
             Widgets.EndScrollView();
 
+            // Language section
+            float languageSectionY = listOutRect.yMax + 10f;
+            Rect languageLabelRect = new Rect(inRect.x, languageSectionY, inRect.width, 22f);
+            Widgets.Label(languageLabelRect, "RimTalk.TTS.CustomLanguage".Translate());
+            
+            Rect languageInputRect = new Rect(inRect.x, languageLabelRect.yMax + 2f, inRect.width, 24f);
+            _customLanguage = Widgets.TextField(languageInputRect, _customLanguage ?? "");
+            
+            // Language hint
+            Rect languageHintRect = new Rect(inRect.x, languageInputRect.yMax + 2f, inRect.width, 18f);
+            GUI.color = new Color(0.6f, 0.6f, 0.6f);
+            Text.Font = GameFont.Tiny;
+            string globalLang = _settings?.TTSTranslationLanguage ?? "";
+            string hintText = string.IsNullOrEmpty(globalLang) 
+                ? "RimTalk.TTS.CustomLanguageHintNoGlobal".Translate()
+                : "RimTalk.TTS.CustomLanguageHint".Translate(globalLang);
+            Widgets.Label(languageHintRect, hintText);
+            Text.Font = GameFont.Small;
+            GUI.color = Color.white;
+
             // Buttons
-            float buttonY = listOutRect.yMax + 10f;
+            float buttonY = languageHintRect.yMax + 10f;
             float buttonWidth = 100f;
             float buttonHeight = 30f;
             float spacing = 10f;
@@ -132,6 +154,7 @@ namespace RimTalk.TTS.UI
             if (Widgets.ButtonText(saveButton, "RimTalk.TTS.Save".Translate()))
             {
                 SaveVoiceModel(_selectedVoiceId);
+                SaveLanguage(_customLanguage);
                 Messages.Message("RimTalk.TTS.VoiceUpdated".Translate(_pawn.LabelShort), 
                     MessageTypeDefOf.TaskCompletion, false);
                 Close();
@@ -215,6 +238,20 @@ namespace RimTalk.TTS.UI
             return VoiceModel.DEFAULT_MODEL_ID;
         }
 
+        private string GetCurrentLanguage()
+        {
+            try
+            {
+                // Get custom language from PawnVoiceManager (null/empty = use global)
+                return Data.PawnVoiceManager.GetLanguage(_pawn) ?? "";
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[RimTalk.TTS] Failed to get current language: {ex.Message}");
+            }
+            return "";
+        }
+
         private void SaveVoiceModel(string voiceId)
         {
             try
@@ -225,6 +262,19 @@ namespace RimTalk.TTS.UI
             catch (Exception ex)
             {
                 Log.Error($"[RimTalk.TTS] Failed to save voice model: {ex.Message}\n{ex.StackTrace}");
+            }
+        }
+
+        private void SaveLanguage(string language)
+        {
+            try
+            {
+                // Save custom language to PawnVoiceManager (empty = use global)
+                Data.PawnVoiceManager.SetLanguage(_pawn, language);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[RimTalk.TTS] Failed to save language: {ex.Message}\n{ex.StackTrace}");
             }
         }
     }

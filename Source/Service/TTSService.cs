@@ -204,8 +204,8 @@ namespace RimTalk.TTS.Service
                 // Get voice model
                 string voiceModelId = GetVoiceModelId(pawn, settings);
 
-                // Process and translate text
-                string finalInputText = await ProcessTextAsync(text, dialogueId, settings);
+                // Process and translate text (using pawn-specific language if set)
+                string finalInputText = await ProcessTextAsync(text, pawn, dialogueId, settings);
                 if (finalInputText == null)
                 {
                     CleanupAndRelease(dialogueId);
@@ -246,11 +246,14 @@ namespace RimTalk.TTS.Service
         /// <summary>
         /// Process and translate text if needed
         /// </summary>
-        private static async Task<string> ProcessTextAsync(string text, Guid dialogueId, TTSSettings settings)
+        private static async Task<string> ProcessTextAsync(string text, Pawn pawn, Guid dialogueId, TTSSettings settings)
         {
-            if (!string.IsNullOrWhiteSpace(settings.TTSTranslationLanguage))
+            // Get effective language for this pawn (pawn-specific or global fallback)
+            string language = Data.PawnVoiceManager.GetEffectiveLanguage(pawn, settings);
+            
+            if (!string.IsNullOrWhiteSpace(language))
             {
-                var preProcessResult = await InputPreProcessService.PreProcessAsync(text, settings.TTSTranslationLanguage, settings);
+                var preProcessResult = await InputPreProcessService.PreProcessAsync(text, language, settings);
                 
                 if (preProcessResult != null && !string.IsNullOrEmpty(preProcessResult.Text))
                 {

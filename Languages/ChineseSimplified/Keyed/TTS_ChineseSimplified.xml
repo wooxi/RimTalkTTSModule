@@ -88,6 +88,9 @@
     <RimTalk.TTS.VoiceDefaultDesc>使用 TTS 设置中的默认语音模型</RimTalk.TTS.VoiceDefaultDesc>
     <RimTalk.TTS.VoiceRuleBased>根据规则确定</RimTalk.TTS.VoiceRuleBased>
     <RimTalk.TTS.VoiceRuleBasedDesc>根据语音分配规则自动确定语音</RimTalk.TTS.VoiceRuleBasedDesc>
+    <RimTalk.TTS.CustomLanguage>自定义语音语言（留空则使用全局设置）：</RimTalk.TTS.CustomLanguage>
+    <RimTalk.TTS.CustomLanguageHint>留空则使用全局设置：{0}</RimTalk.TTS.CustomLanguageHint>
+    <RimTalk.TTS.CustomLanguageHintNoGlobal>留空则使用全局设置（当前未设置）</RimTalk.TTS.CustomLanguageHintNoGlobal>
     <RimTalk.Settings.TTS.RuleBased>根据规则确定</RimTalk.Settings.TTS.RuleBased>
     <RimTalk.Settings.TTS.Rules>显示/隐藏规则列表</RimTalk.Settings.TTS.Rules>
     <RimTalk.TTS.Save>保存</RimTalk.TTS.Save>

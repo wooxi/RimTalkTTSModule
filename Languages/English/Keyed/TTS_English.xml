@@ -88,6 +88,9 @@
     <RimTalk.TTS.VoiceDefaultDesc>Use the default voice model from TTS settings</RimTalk.TTS.VoiceDefaultDesc>
     <RimTalk.TTS.VoiceRuleBased>Rule-based</RimTalk.TTS.VoiceRuleBased>
     <RimTalk.TTS.VoiceRuleBasedDesc>Determine voice automatically based on assignment rules</RimTalk.TTS.VoiceRuleBasedDesc>
+    <RimTalk.TTS.CustomLanguage>Custom Voice Language (leave empty to use global):</RimTalk.TTS.CustomLanguage>
+    <RimTalk.TTS.CustomLanguageHint>Leave empty to use global setting: {0}</RimTalk.TTS.CustomLanguageHint>
+    <RimTalk.TTS.CustomLanguageHintNoGlobal>Leave empty to use global setting (currently not set)</RimTalk.TTS.CustomLanguageHintNoGlobal>
     <RimTalk.Settings.TTS.RuleBased>Rule-based</RimTalk.Settings.TTS.RuleBased>
     <RimTalk.Settings.TTS.Rules>Display/Collapse Rule List</RimTalk.Settings.TTS.Rules>
     <RimTalk.TTS.Save>Save</RimTalk.TTS.Save>

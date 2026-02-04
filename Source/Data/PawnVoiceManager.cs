@@ -4,7 +4,7 @@ using Verse;
 namespace RimTalk.TTS.Data
 {
     /// <summary>
-    /// Manages pawn-specific voice model assignments
+    /// Manages pawn-specific voice model assignments and language settings
     /// Stores mappings independently since main RimTalk's Hediff_Persona doesn't have VoiceModelId field
     /// </summary>
     public static class PawnVoiceManager
@@ -14,6 +14,9 @@ namespace RimTalk.TTS.Data
         
         // Dictionary: PawnId -> Resolved/cached voice model ID (actual voice used for TTS)
         private static Dictionary<int, string> _pawnResolvedVoiceMap = new Dictionary<int, string>();
+        
+        // Dictionary: PawnId -> Custom language for TTS (null/empty = use global setting)
+        private static Dictionary<int, string> _pawnLanguageMap = new Dictionary<int, string>();
 
         /// <summary>
         /// Get voice model ID for a pawn (resolved to actual voice model for TTS)
@@ -196,15 +199,65 @@ namespace RimTalk.TTS.Data
             
             _pawnVoiceMap.Remove(pawn.thingIDNumber);
             _pawnResolvedVoiceMap.Remove(pawn.thingIDNumber);
+            _pawnLanguageMap.Remove(pawn.thingIDNumber);
+        }
+        
+        /// <summary>
+        /// Get custom language for a pawn (returns null/empty if using global setting)
+        /// </summary>
+        public static string GetLanguage(Pawn pawn)
+        {
+            if (pawn == null) return null;
+            
+            if (_pawnLanguageMap.TryGetValue(pawn.thingIDNumber, out string language))
+            {
+                return language;
+            }
+            
+            return null; // Use global setting
+        }
+        
+        /// <summary>
+        /// Get effective language for a pawn (returns pawn-specific or fallback to global setting)
+        /// </summary>
+        public static string GetEffectiveLanguage(Pawn pawn, TTSSettings settings)
+        {
+            string pawnLanguage = GetLanguage(pawn);
+            if (!string.IsNullOrWhiteSpace(pawnLanguage))
+            {
+                return pawnLanguage;
+            }
+            
+            // Fallback to global setting
+            return settings?.TTSTranslationLanguage;
+        }
+        
+        /// <summary>
+        /// Set custom language for a pawn
+        /// Pass null or empty string to use global setting
+        /// </summary>
+        public static void SetLanguage(Pawn pawn, string language)
+        {
+            if (pawn == null) return;
+            
+            if (string.IsNullOrWhiteSpace(language))
+            {
+                _pawnLanguageMap.Remove(pawn.thingIDNumber);
+            }
+            else
+            {
+                _pawnLanguageMap[pawn.thingIDNumber] = language.Trim();
+            }
         }
 
         /// <summary>
-        /// Clear all voice assignments (called when game resets)
+        /// Clear all voice assignments and language settings (called when game resets)
         /// </summary>
         public static void Clear()
         {
             _pawnVoiceMap.Clear();
             _pawnResolvedVoiceMap.Clear();
+            _pawnLanguageMap.Clear();
         }
         
         /// <summary>
@@ -316,12 +369,16 @@ namespace RimTalk.TTS.Data
         public static void ExposeData()
         {
             Scribe_Collections.Look(ref _pawnVoiceMap, "pawnVoiceMap", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref _pawnLanguageMap, "pawnLanguageMap", LookMode.Value, LookMode.Value);
             // Note: We don't save _pawnResolvedVoiceMap - it's a cache that will be rebuilt
             
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
                 if (_pawnVoiceMap == null)
                     _pawnVoiceMap = new Dictionary<int, string>();
+                
+                if (_pawnLanguageMap == null)
+                    _pawnLanguageMap = new Dictionary<int, string>();
                 
                 // Clear resolved cache on load - will be rebuilt on demand
                 _pawnResolvedVoiceMap = new Dictionary<int, string>();
