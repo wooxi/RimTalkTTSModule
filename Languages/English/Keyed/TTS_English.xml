@@ -58,6 +58,7 @@
     <RimTalk.Settings.TTS.ResetPrompt.AzureTTS>Use Default Azure TTS Prompt</RimTalk.Settings.TTS.ResetPrompt.AzureTTS>
     <RimTalk.Settings.TTS.ResetPrompt.EdgeTTS>Use Default Edge-TTS Prompt</RimTalk.Settings.TTS.ResetPrompt.EdgeTTS>
     <RimTalk.Settings.TTS.ResetPrompt.GeminiTTS>Use Default Gemini TTS Prompt</RimTalk.Settings.TTS.ResetPrompt.GeminiTTS>
+    <RimTalk.Settings.TTS.ResetPrompt.TTSWebUI>Use Default TTS-WebUI Prompt</RimTalk.Settings.TTS.ResetPrompt.TTSWebUI>
     <RimTalk.Settings.TTS.ModelConfigurations>Voice Model Configurations</RimTalk.Settings.TTS.ModelConfigurations>
     <RimTalk.Settings.TTS.NoCustomModels>No custom voice models configured yet.\n\nAdd models in TTS Settings to see them here.</RimTalk.Settings.TTS.NoCustomModels>
 
@@ -114,12 +115,17 @@
     <RimTalk.Settings.TTS.TTSSupplier.AzureTTS>AzureTTS (WIP)</RimTalk.Settings.TTS.TTSSupplier.AzureTTS>
     <RimTalk.Settings.TTS.TTSSupplier.EdgeTTS>EdgeTTS (Free)</RimTalk.Settings.TTS.TTSSupplier.EdgeTTS>
     <RimTalk.Settings.TTS.TTSSupplier.GeminiTTS>GeminiTTS (WIP)</RimTalk.Settings.TTS.TTSSupplier.GeminiTTS>
+    <RimTalk.Settings.TTS.TTSSupplier.TTSWebUI>TTS-WebUI (Local)</RimTalk.Settings.TTS.TTSSupplier.TTSWebUI>
     <RimTalk.Settings.TTS.SpeedLabel>Speed: {0}</RimTalk.Settings.TTS.SpeedLabel>
     <RimTalk.Settings.TTS.ModelLabel.CosyVoice>TTS Model (CosyVoice): {0}</RimTalk.Settings.TTS.ModelLabel.CosyVoice>
     <RimTalk.Settings.TTS.ModelLabel.IndexTTS>TTS Model (IndexTTS): {0}</RimTalk.Settings.TTS.ModelLabel.IndexTTS>
     <RimTalk.Settings.TTS.AzureRegionLabel>Azure Region: {0}</RimTalk.Settings.TTS.AzureRegionLabel>
     <RimTalk.Settings.TTS.CustomRegionLabel>Custom region (if not in list):</RimTalk.Settings.TTS.CustomRegionLabel>
     <RimTalk.Settings.TTS.CustomModelIdLabel>Custom model id (optional):</RimTalk.Settings.TTS.CustomModelIdLabel>
+    <RimTalk.Settings.TTS.TTSWebUIBaseUrlLabel>TTS-WebUI API Base URL: {0}</RimTalk.Settings.TTS.TTSWebUIBaseUrlLabel>
+    <RimTalk.Settings.TTS.TTSWebUICustomUrlLabel>Custom URL (if not in list):</RimTalk.Settings.TTS.TTSWebUICustomUrlLabel>
+    <RimTalk.Settings.TTS.TTSWebUIModelLabel>TTS-WebUI Model: {0}</RimTalk.Settings.TTS.TTSWebUIModelLabel>
+    <RimTalk.Settings.TTS.TTSWebUIModelHint>Model name depends on your TTS-WebUI extensions (e.g., bark, tortoise, xtts, kokoro)</RimTalk.Settings.TTS.TTSWebUIModelHint>
     <RimTalk.Settings.TTS.ResetModelsButton>Synchronize model list</RimTalk.Settings.TTS.ResetModelsButton>
     <RimTalk.Settings.TTS.AzureVoiceLibrary>View AzureTTS Voice Library</RimTalk.Settings.TTS.AzureVoiceLibrary>
     <RimTalk.Settings.TTS.EdgeVoiceLibrary>View EdgeTTS Voice Library</RimTalk.Settings.TTS.EdgeVoiceLibrary>

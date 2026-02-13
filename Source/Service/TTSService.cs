@@ -90,6 +90,18 @@ namespace RimTalk.TTS.Service
                     return new Provider.EdgeTTSProvider();
                 case TTSSettings.TTSSupplier.GeminiTTS:
                     return new Provider.GeminiTTSProvider();
+                case TTSSettings.TTSSupplier.TTSWebUI:
+                    var ttsWebUIProvider = new Provider.TTSWebUIProvider();
+                    if (settings != null)
+                    {
+                        // Use SupplierRegion to store the base URL for TTSWebUI
+                        string baseUrl = settings.GetSupplierRegion(supplier);
+                        if (!string.IsNullOrWhiteSpace(baseUrl))
+                        {
+                            ttsWebUIProvider.SetBaseUrl(baseUrl);
+                        }
+                    }
+                    return ttsWebUIProvider;
                 case TTSSettings.TTSSupplier.None:
                 default:
                     return new Provider.NoneProvider();

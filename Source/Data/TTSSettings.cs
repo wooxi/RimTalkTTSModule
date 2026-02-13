@@ -19,7 +19,8 @@ namespace RimTalk.TTS.Data
             IndexTTS,
             AzureTTS,
             EdgeTTS,
-            GeminiTTS
+            GeminiTTS,
+            TTSWebUI
         }
 
         // Default constants (use these instead of deprecated legacy fields)
@@ -341,6 +342,18 @@ namespace RimTalk.TTS.Data
                     presets.Add(new VoiceModel("Fenrir", "Fenrir (Excitable)"));
                     presets.Add(new VoiceModel("Leda", "Leda (Youthful)"));
                     presets.Add(new VoiceModel("Callirrhoe", "Callirrhoe (Easy-going)"));
+                    break;
+                case TTSSupplier.TTSWebUI:
+                    // TTS-WebUI: Common voices from various supported models
+                    // Users should configure based on their installed TTS-WebUI extensions
+                    presets.Add(new VoiceModel("default", "Default Voice"));
+                    presets.Add(new VoiceModel("bark_v0_en_speaker_0", "Bark - Speaker 0 (EN)"));
+                    presets.Add(new VoiceModel("bark_v0_en_speaker_1", "Bark - Speaker 1 (EN)"));
+                    presets.Add(new VoiceModel("bark_v0_zh_speaker_0", "Bark - Speaker 0 (ZH)"));
+                    presets.Add(new VoiceModel("tortoise_random", "Tortoise - Random"));
+                    presets.Add(new VoiceModel("xtts_default", "XTTSv2 - Default"));
+                    presets.Add(new VoiceModel("kokoro_af", "Kokoro - AF"));
+                    presets.Add(new VoiceModel("kokoro_am", "Kokoro - AM"));
                     break;
                 default:
                     // FishAudio: no presets

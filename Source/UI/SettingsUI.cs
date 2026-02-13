@@ -162,6 +162,11 @@ namespace RimTalk.TTS.UI
                     settings.Supplier = TTSSettings.TTSSupplier.GeminiTTS;
                     TTSService.SetProvider(settings.Supplier, settings);
                 }));
+                options.Add(new FloatMenuOption("RimTalk.Settings.TTS.TTSSupplier.TTSWebUI".Translate(), delegate
+                {
+                    settings.Supplier = TTSSettings.TTSSupplier.TTSWebUI;
+                    TTSService.SetProvider(settings.Supplier, settings);
+                }));
                 options.Add(new FloatMenuOption("RimTalk.Settings.TTS.None".Translate(), delegate
                 {
                     settings.Supplier = TTSSettings.TTSSupplier.None;
@@ -277,6 +282,63 @@ namespace RimTalk.TTS.UI
                         settings.SetSupplierRegion(settings.Supplier, customRegion);
                         // Update provider with new region
                         TTSService.SetProvider(settings.Supplier, settings);
+                    }
+                }
+
+                // TTSWebUI base URL configuration
+                if (settings.Supplier == TTSSettings.TTSSupplier.TTSWebUI)
+                {
+                    string currentBaseUrl = settings.GetSupplierRegion(settings.Supplier);
+                    if (string.IsNullOrWhiteSpace(currentBaseUrl))
+                    {
+                        currentBaseUrl = "http://localhost:7778/v1";
+                    }
+                    
+                    listing.Label("RimTalk.Settings.TTS.TTSWebUIBaseUrlLabel".Translate(currentBaseUrl));
+                    listing.Gap(6f);
+                    
+                    // Common TTSWebUI base URLs
+                    var urlOptions = new[] { 
+                        "http://localhost:7778/v1",  // Default OpenAI API endpoint
+                        "http://localhost:7770/v1",  // Gradio default port
+                        "http://127.0.0.1:7778/v1"
+                    };
+                    
+                    Rect urlRect = listing.GetRect(30f);
+                    if (Widgets.ButtonText(urlRect, currentBaseUrl))
+                    {
+                        var options = new System.Collections.Generic.List<FloatMenuOption>();
+                        foreach (var url in urlOptions)
+                        {
+                            options.Add(new FloatMenuOption(url, delegate
+                            {
+                                settings.SetSupplierRegion(settings.Supplier, url);
+                                TTSService.SetProvider(settings.Supplier, settings);
+                            }));
+                        }
+                        Find.WindowStack.Add(new FloatMenu(options));
+                    }
+                    
+                    listing.Gap(6f);
+                    listing.Label("RimTalk.Settings.TTS.TTSWebUICustomUrlLabel".Translate());
+                    string customUrl = listing.TextEntry(currentBaseUrl);
+                    if (customUrl != currentBaseUrl)
+                    {
+                        settings.SetSupplierRegion(settings.Supplier, customUrl);
+                        TTSService.SetProvider(settings.Supplier, settings);
+                    }
+                    
+                    listing.Gap(6f);
+                    
+                    // Model selection for TTSWebUI (user can specify model name)
+                    string currentModel = settings.GetSupplierModel(settings.Supplier);
+                    listing.Label("RimTalk.Settings.TTS.TTSWebUIModelLabel".Translate(currentModel ?? "(default)"));
+                    listing.Gap(6f);
+                    listing.Label("RimTalk.Settings.TTS.TTSWebUIModelHint".Translate());
+                    string customModel = listing.TextEntry(currentModel ?? "");
+                    if (customModel != currentModel)
+                    {
+                        settings.SetSupplierModel(settings.Supplier, customModel);
                     }
                 }
 
@@ -417,6 +479,17 @@ namespace RimTalk.TTS.UI
             {
                 settings.CustomTTSProcessingPrompt = Data.TTSConstant.DefaultTTSProcessingPrompt_GeminiTTS;
                 processingPromptBuffer = Data.TTSConstant.DefaultTTSProcessingPrompt_GeminiTTS;
+            }
+
+            // Reset buttons - Third row: TTSWebUI
+            listing.Gap(6f);
+            Rect resetButtonsRect3 = listing.GetRect(30f);
+            Rect ttswebuiRect = new Rect(resetButtonsRect3.x, resetButtonsRect3.y, btnW, resetButtonsRect3.height);
+
+            if (Widgets.ButtonText(ttswebuiRect, "RimTalk.Settings.TTS.ResetPrompt.TTSWebUI".Translate()))
+            {
+                settings.CustomTTSProcessingPrompt = Data.TTSConstant.DefaultTTSProcessingPrompt_TTSWebUI;
+                processingPromptBuffer = Data.TTSConstant.DefaultTTSProcessingPrompt_TTSWebUI;
             }
         }
 
@@ -1026,6 +1099,7 @@ namespace RimTalk.TTS.UI
                 TTSSettings.TTSSupplier.AzureTTS => "RimTalk.Settings.TTS.TTSSupplier.AzureTTS".Translate(),
                 TTSSettings.TTSSupplier.EdgeTTS => "RimTalk.Settings.TTS.TTSSupplier.EdgeTTS".Translate(),
                 TTSSettings.TTSSupplier.GeminiTTS => "RimTalk.Settings.TTS.TTSSupplier.GeminiTTS".Translate(),
+                TTSSettings.TTSSupplier.TTSWebUI => "RimTalk.Settings.TTS.TTSSupplier.TTSWebUI".Translate(),
                 TTSSettings.TTSSupplier.None => "RimTalk.Settings.TTS.None".Translate(),
                 _ => supplier.ToString(),
             };

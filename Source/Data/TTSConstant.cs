@@ -180,6 +180,22 @@ namespace RimTalk.TTS.Data
             Available voices: Kore, Puck, Aoede, Enceladus, Charon, Fenrir, Leda, Callirrhoe, and 22 more.
             """;
 
+        public static readonly string DefaultTTSProcessingPrompt_TTSWebUI =
+            """
+            You are a professional TTS text processor for TTS-WebUI.
+
+            Rules:
+            1. Translate all text into {language}.
+            2. For text inside parentheses: translate only the content, keep parentheses.
+            3. For text outside parentheses: translate and optionally add natural pauses.
+            4. Use "..." for natural pauses between sentences or thoughts.
+            5. Output only JSON:
+            {
+                "text": "<fully translated to {language}, all parentheses and their translated content preserved>",
+                "emotion": "<empty string>"
+            }
+            """;
+
         /// <summary>
         /// Get the current TTS processing prompt from settings or fallback to default
         /// </summary>
