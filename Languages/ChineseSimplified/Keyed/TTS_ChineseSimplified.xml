@@ -58,6 +58,7 @@
     <RimTalk.Settings.TTS.ResetPrompt.AzureTTS>使用 Azure TTS 默认提示词</RimTalk.Settings.TTS.ResetPrompt.AzureTTS>
     <RimTalk.Settings.TTS.ResetPrompt.EdgeTTS>使用 Edge-TTS 默认提示词</RimTalk.Settings.TTS.ResetPrompt.EdgeTTS>
     <RimTalk.Settings.TTS.ResetPrompt.GeminiTTS>使用 Gemini TTS 默认提示词</RimTalk.Settings.TTS.ResetPrompt.GeminiTTS>
+    <RimTalk.Settings.TTS.ResetPrompt.Custom>使用自定义供应商默认提示词</RimTalk.Settings.TTS.ResetPrompt.Custom>
     <RimTalk.Settings.TTS.ModelConfigurations>语音模型配置</RimTalk.Settings.TTS.ModelConfigurations>
     <RimTalk.Settings.TTS.NoCustomModels>尚未配置自定义语音模型。\n\n在 TTS 设置中添加模型后即可在此看到。</RimTalk.Settings.TTS.NoCustomModels>
 
@@ -195,4 +196,55 @@
     <RimTalk.Settings.TTS.Rule.Or>或</RimTalk.Settings.TTS.Rule.Or>
     <RimTalk.Settings.TTS.Rule.And>并且</RimTalk.Settings.TTS.Rule.And>
     <RimTalk.Settings.TTS.Rule.AgeLabel>年龄</RimTalk.Settings.TTS.Rule.AgeLabel>
+
+    <!-- 自定义 TTS 供应商 -->
+    <RimTalk.Settings.TTS.CustomProvider.Section>自定义 TTS 供应商</RimTalk.Settings.TTS.CustomProvider.Section>
+    <RimTalk.Settings.TTS.CustomProvider.Description>添加兼容 OpenAI 格式的自定义 TTS 供应商。支持自定义 URL、认证方式、情感参数、温度参数及自定义请求格式。</RimTalk.Settings.TTS.CustomProvider.Description>
+    <RimTalk.Settings.TTS.CustomProvider.NoProviders>尚未配置任何自定义供应商。点击"添加新供应商"来创建一个。</RimTalk.Settings.TTS.CustomProvider.NoProviders>
+    <RimTalk.Settings.TTS.CustomProvider.AddNew>+ 添加新自定义供应商</RimTalk.Settings.TTS.CustomProvider.AddNew>
+    <RimTalk.Settings.TTS.CustomProvider.Select>选择</RimTalk.Settings.TTS.CustomProvider.Select>
+    <RimTalk.Settings.TTS.CustomProvider.Edit>编辑</RimTalk.Settings.TTS.CustomProvider.Edit>
+    <RimTalk.Settings.TTS.CustomProvider.Delete>删除</RimTalk.Settings.TTS.CustomProvider.Delete>
+    <RimTalk.Settings.TTS.CustomProvider.Unnamed>[自定义]（未命名）</RimTalk.Settings.TTS.CustomProvider.Unnamed>
+    <RimTalk.Settings.TTS.CustomProvider.AddTitle>添加自定义 TTS 供应商</RimTalk.Settings.TTS.CustomProvider.AddTitle>
+    <RimTalk.Settings.TTS.CustomProvider.EditTitle>编辑自定义 TTS 供应商</RimTalk.Settings.TTS.CustomProvider.EditTitle>
+    <RimTalk.Settings.TTS.CustomProvider.EditConfig>编辑供应商配置</RimTalk.Settings.TTS.CustomProvider.EditConfig>
+    <RimTalk.Settings.TTS.CustomProvider.CurrentModel>TTS 模型（自定义供应商）：{0}</RimTalk.Settings.TTS.CustomProvider.CurrentModel>
+    <RimTalk.Settings.TTS.CustomProvider.BasicSettings>基础设置</RimTalk.Settings.TTS.CustomProvider.BasicSettings>
+    <RimTalk.Settings.TTS.CustomProvider.Name>供应商名称：</RimTalk.Settings.TTS.CustomProvider.Name>
+    <RimTalk.Settings.TTS.CustomProvider.BaseUrl>基础 URL（如 https://api.openai.com/v1）：</RimTalk.Settings.TTS.CustomProvider.BaseUrl>
+    <RimTalk.Settings.TTS.CustomProvider.EndpointPath>接口路径（默认：/audio/speech）：</RimTalk.Settings.TTS.CustomProvider.EndpointPath>
+    <RimTalk.Settings.TTS.CustomProvider.FullUrlPreview>完整 URL：</RimTalk.Settings.TTS.CustomProvider.FullUrlPreview>
+    <RimTalk.Settings.TTS.CustomProvider.Model>模型（如 tts-1、tts-1-hd）：</RimTalk.Settings.TTS.CustomProvider.Model>
+    <RimTalk.Settings.TTS.CustomProvider.DefaultVoice>默认音色（如 alloy、echo）：</RimTalk.Settings.TTS.CustomProvider.DefaultVoice>
+    <RimTalk.Settings.TTS.CustomProvider.ResponseFormat>响应格式：</RimTalk.Settings.TTS.CustomProvider.ResponseFormat>
+    <RimTalk.Settings.TTS.CustomProvider.AuthSettings>认证设置</RimTalk.Settings.TTS.CustomProvider.AuthSettings>
+    <RimTalk.Settings.TTS.CustomProvider.RequiresApiKey>需要 API 密钥</RimTalk.Settings.TTS.CustomProvider.RequiresApiKey>
+    <RimTalk.Settings.TTS.CustomProvider.ApiKey>API 密钥（存储在供应商配置中）：</RimTalk.Settings.TTS.CustomProvider.ApiKey>
+    <RimTalk.Settings.TTS.CustomProvider.AuthHeaderName>认证头名称（默认：Authorization）：</RimTalk.Settings.TTS.CustomProvider.AuthHeaderName>
+    <RimTalk.Settings.TTS.CustomProvider.AuthHeaderPrefix>认证头前缀（默认：Bearer ）：</RimTalk.Settings.TTS.CustomProvider.AuthHeaderPrefix>
+    <RimTalk.Settings.TTS.CustomProvider.OptionalFeatures>可选 TTS 功能</RimTalk.Settings.TTS.CustomProvider.OptionalFeatures>
+    <RimTalk.Settings.TTS.CustomProvider.EnableSpeed>启用语速参数</RimTalk.Settings.TTS.CustomProvider.EnableSpeed>
+    <RimTalk.Settings.TTS.CustomProvider.EnableSpeedTooltip>在请求体中发送 "speed" 字段（OpenAI 标准）。</RimTalk.Settings.TTS.CustomProvider.EnableSpeedTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTemperature>启用温度参数</RimTalk.Settings.TTS.CustomProvider.EnableTemperature>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTemperatureTooltip>发送 "temperature" 字段。非标准参数，但许多供应商支持。</RimTalk.Settings.TTS.CustomProvider.EnableTemperatureTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTopP>启用 Top P 参数</RimTalk.Settings.TTS.CustomProvider.EnableTopP>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTopPTooltip>发送 "top_p" 字段。非标准参数，部分供应商支持。</RimTalk.Settings.TTS.CustomProvider.EnableTopPTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EnableEmotion>启用情感/风格字段</RimTalk.Settings.TTS.CustomProvider.EnableEmotion>
+    <RimTalk.Settings.TTS.CustomProvider.EnableEmotionTooltip>在请求中发送情感或风格字段。字段名可自定义。</RimTalk.Settings.TTS.CustomProvider.EnableEmotionTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EmotionFieldName>情感字段名（如 emotion、style）：</RimTalk.Settings.TTS.CustomProvider.EmotionFieldName>
+    <RimTalk.Settings.TTS.CustomProvider.EnableInstructText>启用指令文本字段</RimTalk.Settings.TTS.CustomProvider.EnableInstructText>
+    <RimTalk.Settings.TTS.CustomProvider.EnableInstructTextTooltip>发送指令文本字段用于可控 TTS。字段名可自定义。</RimTalk.Settings.TTS.CustomProvider.EnableInstructTextTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.InstructTextFieldName>指令字段名（如 instruct_text、prompt）：</RimTalk.Settings.TTS.CustomProvider.InstructTextFieldName>
+    <RimTalk.Settings.TTS.CustomProvider.EnableStreaming>启用流式传输</RimTalk.Settings.TTS.CustomProvider.EnableStreaming>
+    <RimTalk.Settings.TTS.CustomProvider.EnableStreamingTooltip>在请求中添加 "stream": true。响应仍需返回完整音频。</RimTalk.Settings.TTS.CustomProvider.EnableStreamingTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.Timeout>请求超时时间（秒，默认 30）：</RimTalk.Settings.TTS.CustomProvider.Timeout>
+    <RimTalk.Settings.TTS.CustomProvider.CustomRequestBody>自定义请求体模板</RimTalk.Settings.TTS.CustomProvider.CustomRequestBody>
+    <RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBody>使用自定义 JSON 模板</RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBody>
+    <RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBodyTooltip>用自定义 JSON 模板覆盖自动生成的请求体。占位符：{model}、{input}、{voice}、{speed}、{response_format}、{temperature}、{top_p}、{emotion}、{instruct_text}、{api_key}</RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBodyTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.TemplatePlaceholders>占位符：{model}、{input}、{voice}、{speed}、{response_format}、{temperature}、{top_p}、{emotion}、{instruct_text}、{api_key}</RimTalk.Settings.TTS.CustomProvider.TemplatePlaceholders>
+    <RimTalk.Settings.TTS.CustomProvider.LoadDefaultTemplate>加载默认 OpenAI 模板</RimTalk.Settings.TTS.CustomProvider.LoadDefaultTemplate>
+    <RimTalk.Settings.TTS.CustomProvider.NameRequired>供应商名称不能为空</RimTalk.Settings.TTS.CustomProvider.NameRequired>
+    <RimTalk.Settings.TTS.CustomProvider.UrlRequired>基础 URL 不能为空</RimTalk.Settings.TTS.CustomProvider.UrlRequired>
+    <RimTalk.Settings.TTS.TTSSupplier.Custom>[自定义供应商]</RimTalk.Settings.TTS.TTSSupplier.Custom>
 </LanguageData>

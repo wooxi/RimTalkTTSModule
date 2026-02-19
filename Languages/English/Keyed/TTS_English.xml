@@ -58,6 +58,7 @@
     <RimTalk.Settings.TTS.ResetPrompt.AzureTTS>Use Default Azure TTS Prompt</RimTalk.Settings.TTS.ResetPrompt.AzureTTS>
     <RimTalk.Settings.TTS.ResetPrompt.EdgeTTS>Use Default Edge-TTS Prompt</RimTalk.Settings.TTS.ResetPrompt.EdgeTTS>
     <RimTalk.Settings.TTS.ResetPrompt.GeminiTTS>Use Default Gemini TTS Prompt</RimTalk.Settings.TTS.ResetPrompt.GeminiTTS>
+    <RimTalk.Settings.TTS.ResetPrompt.Custom>Use Default Custom Provider Prompt</RimTalk.Settings.TTS.ResetPrompt.Custom>
     <RimTalk.Settings.TTS.ModelConfigurations>Voice Model Configurations</RimTalk.Settings.TTS.ModelConfigurations>
     <RimTalk.Settings.TTS.NoCustomModels>No custom voice models configured yet.\n\nAdd models in TTS Settings to see them here.</RimTalk.Settings.TTS.NoCustomModels>
 
@@ -196,4 +197,55 @@
     <RimTalk.Settings.TTS.Rule.Or> or </RimTalk.Settings.TTS.Rule.Or>
     <RimTalk.Settings.TTS.Rule.And> and </RimTalk.Settings.TTS.Rule.And>
     <RimTalk.Settings.TTS.Rule.AgeLabel>Age</RimTalk.Settings.TTS.Rule.AgeLabel>
+
+    <!-- Custom TTS Provider -->
+    <RimTalk.Settings.TTS.CustomProvider.Section>Custom TTS Providers</RimTalk.Settings.TTS.CustomProvider.Section>
+    <RimTalk.Settings.TTS.CustomProvider.Description>Add custom OpenAI-compatible TTS providers. Supports custom URL, authentication, emotion, temperature, and custom request format.</RimTalk.Settings.TTS.CustomProvider.Description>
+    <RimTalk.Settings.TTS.CustomProvider.NoProviders>No custom providers configured. Click "Add New Provider" to create one.</RimTalk.Settings.TTS.CustomProvider.NoProviders>
+    <RimTalk.Settings.TTS.CustomProvider.AddNew>+ Add New Custom Provider</RimTalk.Settings.TTS.CustomProvider.AddNew>
+    <RimTalk.Settings.TTS.CustomProvider.Select>Select</RimTalk.Settings.TTS.CustomProvider.Select>
+    <RimTalk.Settings.TTS.CustomProvider.Edit>Edit</RimTalk.Settings.TTS.CustomProvider.Edit>
+    <RimTalk.Settings.TTS.CustomProvider.Delete>Delete</RimTalk.Settings.TTS.CustomProvider.Delete>
+    <RimTalk.Settings.TTS.CustomProvider.Unnamed>[Custom] (Unnamed)</RimTalk.Settings.TTS.CustomProvider.Unnamed>
+    <RimTalk.Settings.TTS.CustomProvider.AddTitle>Add Custom TTS Provider</RimTalk.Settings.TTS.CustomProvider.AddTitle>
+    <RimTalk.Settings.TTS.CustomProvider.EditTitle>Edit Custom TTS Provider</RimTalk.Settings.TTS.CustomProvider.EditTitle>
+    <RimTalk.Settings.TTS.CustomProvider.EditConfig>Edit Provider Config</RimTalk.Settings.TTS.CustomProvider.EditConfig>
+    <RimTalk.Settings.TTS.CustomProvider.CurrentModel>TTS Model (Custom Provider): {0}</RimTalk.Settings.TTS.CustomProvider.CurrentModel>
+    <RimTalk.Settings.TTS.CustomProvider.BasicSettings>Basic Settings</RimTalk.Settings.TTS.CustomProvider.BasicSettings>
+    <RimTalk.Settings.TTS.CustomProvider.Name>Provider Name:</RimTalk.Settings.TTS.CustomProvider.Name>
+    <RimTalk.Settings.TTS.CustomProvider.BaseUrl>Base URL (e.g. https://api.openai.com/v1):</RimTalk.Settings.TTS.CustomProvider.BaseUrl>
+    <RimTalk.Settings.TTS.CustomProvider.EndpointPath>Endpoint Path (default: /audio/speech):</RimTalk.Settings.TTS.CustomProvider.EndpointPath>
+    <RimTalk.Settings.TTS.CustomProvider.FullUrlPreview>Full URL: </RimTalk.Settings.TTS.CustomProvider.FullUrlPreview>
+    <RimTalk.Settings.TTS.CustomProvider.Model>Model (e.g. tts-1, tts-1-hd):</RimTalk.Settings.TTS.CustomProvider.Model>
+    <RimTalk.Settings.TTS.CustomProvider.DefaultVoice>Default Voice (e.g. alloy, echo):</RimTalk.Settings.TTS.CustomProvider.DefaultVoice>
+    <RimTalk.Settings.TTS.CustomProvider.ResponseFormat>Response Format:</RimTalk.Settings.TTS.CustomProvider.ResponseFormat>
+    <RimTalk.Settings.TTS.CustomProvider.AuthSettings>Authentication</RimTalk.Settings.TTS.CustomProvider.AuthSettings>
+    <RimTalk.Settings.TTS.CustomProvider.RequiresApiKey>Requires API Key</RimTalk.Settings.TTS.CustomProvider.RequiresApiKey>
+    <RimTalk.Settings.TTS.CustomProvider.ApiKey>API Key (stored in provider config):</RimTalk.Settings.TTS.CustomProvider.ApiKey>
+    <RimTalk.Settings.TTS.CustomProvider.AuthHeaderName>Auth Header Name (default: Authorization):</RimTalk.Settings.TTS.CustomProvider.AuthHeaderName>
+    <RimTalk.Settings.TTS.CustomProvider.AuthHeaderPrefix>Auth Header Prefix (default: Bearer ):</RimTalk.Settings.TTS.CustomProvider.AuthHeaderPrefix>
+    <RimTalk.Settings.TTS.CustomProvider.OptionalFeatures>Optional TTS Features</RimTalk.Settings.TTS.CustomProvider.OptionalFeatures>
+    <RimTalk.Settings.TTS.CustomProvider.EnableSpeed>Enable Speed Parameter</RimTalk.Settings.TTS.CustomProvider.EnableSpeed>
+    <RimTalk.Settings.TTS.CustomProvider.EnableSpeedTooltip>Send "speed" field in the request body (OpenAI standard).</RimTalk.Settings.TTS.CustomProvider.EnableSpeedTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTemperature>Enable Temperature Parameter</RimTalk.Settings.TTS.CustomProvider.EnableTemperature>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTemperatureTooltip>Send "temperature" field. Non-standard but supported by many providers.</RimTalk.Settings.TTS.CustomProvider.EnableTemperatureTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTopP>Enable Top P Parameter</RimTalk.Settings.TTS.CustomProvider.EnableTopP>
+    <RimTalk.Settings.TTS.CustomProvider.EnableTopPTooltip>Send "top_p" field. Non-standard but used by some providers.</RimTalk.Settings.TTS.CustomProvider.EnableTopPTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EnableEmotion>Enable Emotion/Style Field</RimTalk.Settings.TTS.CustomProvider.EnableEmotion>
+    <RimTalk.Settings.TTS.CustomProvider.EnableEmotionTooltip>Send an emotion or style field in the request. Field name is configurable.</RimTalk.Settings.TTS.CustomProvider.EnableEmotionTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.EmotionFieldName>Emotion Field Name (e.g. emotion, style):</RimTalk.Settings.TTS.CustomProvider.EmotionFieldName>
+    <RimTalk.Settings.TTS.CustomProvider.EnableInstructText>Enable Instruct Text Field</RimTalk.Settings.TTS.CustomProvider.EnableInstructText>
+    <RimTalk.Settings.TTS.CustomProvider.EnableInstructTextTooltip>Send an instruct text field for controllable TTS. Field name is configurable.</RimTalk.Settings.TTS.CustomProvider.EnableInstructTextTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.InstructTextFieldName>Instruct Field Name (e.g. instruct_text, prompt):</RimTalk.Settings.TTS.CustomProvider.InstructTextFieldName>
+    <RimTalk.Settings.TTS.CustomProvider.EnableStreaming>Enable Streaming</RimTalk.Settings.TTS.CustomProvider.EnableStreaming>
+    <RimTalk.Settings.TTS.CustomProvider.EnableStreamingTooltip>Add "stream": true to the request. Response must still return complete audio.</RimTalk.Settings.TTS.CustomProvider.EnableStreamingTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.Timeout>Request Timeout (seconds, default 30):</RimTalk.Settings.TTS.CustomProvider.Timeout>
+    <RimTalk.Settings.TTS.CustomProvider.CustomRequestBody>Custom Request Body Template</RimTalk.Settings.TTS.CustomProvider.CustomRequestBody>
+    <RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBody>Use Custom JSON Template</RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBody>
+    <RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBodyTooltip>Override the auto-generated request body with a custom JSON template. Placeholders: {model}, {input}, {voice}, {speed}, {response_format}, {temperature}, {top_p}, {emotion}, {instruct_text}, {api_key}</RimTalk.Settings.TTS.CustomProvider.UseCustomRequestBodyTooltip>
+    <RimTalk.Settings.TTS.CustomProvider.TemplatePlaceholders>Placeholders: {model}, {input}, {voice}, {speed}, {response_format}, {temperature}, {top_p}, {emotion}, {instruct_text}, {api_key}</RimTalk.Settings.TTS.CustomProvider.TemplatePlaceholders>
+    <RimTalk.Settings.TTS.CustomProvider.LoadDefaultTemplate>Load Default OpenAI Template</RimTalk.Settings.TTS.CustomProvider.LoadDefaultTemplate>
+    <RimTalk.Settings.TTS.CustomProvider.NameRequired>Provider name is required</RimTalk.Settings.TTS.CustomProvider.NameRequired>
+    <RimTalk.Settings.TTS.CustomProvider.UrlRequired>Base URL is required</RimTalk.Settings.TTS.CustomProvider.UrlRequired>
+    <RimTalk.Settings.TTS.TTSSupplier.Custom>[Custom Provider]</RimTalk.Settings.TTS.TTSSupplier.Custom>
 </LanguageData>

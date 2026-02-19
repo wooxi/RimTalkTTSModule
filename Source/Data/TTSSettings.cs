@@ -19,7 +19,8 @@ namespace RimTalk.TTS.Data
             IndexTTS,
             AzureTTS,
             EdgeTTS,
-            GeminiTTS
+            GeminiTTS,
+            Custom
         }
 
         // Default constants (use these instead of deprecated legacy fields)
@@ -100,6 +101,11 @@ namespace RimTalk.TTS.Data
         // Per-supplier voice assignment rules (advanced mode)
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<VoiceAssignmentRule>> SupplierVoiceRules = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<VoiceAssignmentRule>>();
 
+        // Custom TTS providers list
+        public System.Collections.Generic.List<CustomProviderConfig> CustomProviders = new System.Collections.Generic.List<CustomProviderConfig>();
+        // Currently selected custom provider ID (used when Supplier == Custom)
+        public string CurrentCustomProviderId = "";
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -139,6 +145,11 @@ namespace RimTalk.TTS.Data
             Scribe_Values.Look(ref Model, "model", "deepseek-chat");
             Scribe_Values.Look(ref CustomBaseUrl, "customBaseUrl", "");
             Scribe_Values.Look(ref RemoveBracketsInPreProcess, "removeBracketsInPreProcess", false);
+
+            // Custom providers
+            Scribe_Collections.Look(ref CustomProviders, "customProviders", LookMode.Deep);
+            Scribe_Values.Look(ref CurrentCustomProviderId, "currentCustomProviderId", "");
+            if (CustomProviders == null) CustomProviders = new System.Collections.Generic.List<CustomProviderConfig>();
 
             LoadOldSettings();
         }
@@ -391,6 +402,134 @@ namespace RimTalk.TTS.Data
             
             // Notify voice manager that rules changed
             PawnVoiceManager.OnRulesChanged();
+        }
+
+        // ===== Custom Provider Helpers =====
+
+        /// <summary>
+        /// Get the effective supplier key string for dictionary lookups.
+        /// For built-in suppliers: enum name. For custom: "Custom_{Id}".
+        /// </summary>
+        public string GetCurrentSupplierKey()
+        {
+            if (Supplier == TTSSupplier.Custom)
+            {
+                var cfg = GetCurrentCustomProvider();
+                return cfg?.GetSupplierKey() ?? "Custom";
+            }
+            return Supplier.ToString();
+        }
+
+        /// <summary>Get the currently selected custom provider config, or null.</summary>
+        public CustomProviderConfig GetCurrentCustomProvider()
+        {
+            if (string.IsNullOrEmpty(CurrentCustomProviderId) || CustomProviders == null) return null;
+            return CustomProviders.Find(c => c.Id == CurrentCustomProviderId);
+        }
+
+        /// <summary>Get a custom provider by its ID.</summary>
+        public CustomProviderConfig GetCustomProviderById(string id)
+        {
+            if (string.IsNullOrEmpty(id) || CustomProviders == null) return null;
+            return CustomProviders.Find(c => c.Id == id);
+        }
+
+        /// <summary>Add a new custom provider and return it.</summary>
+        public CustomProviderConfig AddCustomProvider(string name, string baseUrl)
+        {
+            if (CustomProviders == null) CustomProviders = new System.Collections.Generic.List<CustomProviderConfig>();
+            var config = new CustomProviderConfig(name, baseUrl);
+            CustomProviders.Add(config);
+            // Initialize per-supplier dictionaries for this custom provider
+            InitializeCustomProviderDictionaries(config);
+            return config;
+        }
+
+        /// <summary>Remove a custom provider by ID.</summary>
+        public bool RemoveCustomProvider(string id)
+        {
+            if (CustomProviders == null) return false;
+            string key = $"Custom_{id}";
+            // Clean up per-supplier dictionaries
+            SupplierApiKeys.Remove(key);
+            SupplierModels.Remove(key);
+            SupplierGenerateCooldownMs.Remove(key);
+            SupplierVolume.Remove(key);
+            SupplierTemperature.Remove(key);
+            SupplierTopP.Remove(key);
+            SupplierSpeed.Remove(key);
+            SupplierVoiceModels.Remove(key);
+            SupplierDefaultVoiceModelId.Remove(key);
+            SupplierRegion.Remove(key);
+            SupplierAdvancedMode.Remove(key);
+            SupplierVoiceRules.Remove(key);
+            // If it's the current custom provider, unselect
+            if (CurrentCustomProviderId == id)
+                CurrentCustomProviderId = "";
+            return CustomProviders.RemoveAll(c => c.Id == id) > 0;
+        }
+
+        /// <summary>Initialize per-supplier dictionaries for a new custom provider.</summary>
+        private void InitializeCustomProviderDictionaries(CustomProviderConfig config)
+        {
+            string key = config.GetSupplierKey();
+            if (!SupplierApiKeys.ContainsKey(key)) SupplierApiKeys[key] = config.ApiKey ?? "";
+            if (!SupplierModels.ContainsKey(key)) SupplierModels[key] = config.Model ?? "tts-1";
+            if (!SupplierGenerateCooldownMs.ContainsKey(key)) SupplierGenerateCooldownMs[key] = DEFAULT_GENERATE_COOLDOWN_MS;
+            if (!SupplierVolume.ContainsKey(key)) SupplierVolume[key] = DEFAULT_SUPPLIER_VOLUME;
+            if (!SupplierTemperature.ContainsKey(key)) SupplierTemperature[key] = 0.9f;
+            if (!SupplierTopP.ContainsKey(key)) SupplierTopP[key] = 0.9f;
+            if (!SupplierSpeed.ContainsKey(key)) SupplierSpeed[key] = DEFAULT_SUPPLIER_SPEED;
+            if (!SupplierVoiceModels.ContainsKey(key)) SupplierVoiceModels[key] = new System.Collections.Generic.List<VoiceModel>();
+            if (!SupplierDefaultVoiceModelId.ContainsKey(key)) SupplierDefaultVoiceModelId[key] = VoiceModel.NONE_MODEL_ID;
+            if (!SupplierAdvancedMode.ContainsKey(key)) SupplierAdvancedMode[key] = false;
+            if (!SupplierVoiceRules.ContainsKey(key)) SupplierVoiceRules[key] = new System.Collections.Generic.List<VoiceAssignmentRule>();
+        }
+
+        // ===== String-key overloads for custom supplier dictionary access =====
+
+        public string GetSupplierApiKey(string key) => SupplierApiKeys.TryGetValue(key, out var v) ? v : string.Empty;
+        public void SetSupplierApiKey(string key, string apiKey) => SupplierApiKeys[key] = apiKey ?? string.Empty;
+        public string GetSupplierModel(string key) => SupplierModels.TryGetValue(key, out var v) ? v : string.Empty;
+        public void SetSupplierModel(string key, string model) => SupplierModels[key] = model ?? string.Empty;
+        public System.Collections.Generic.List<VoiceModel> GetSupplierVoiceModels(string key) => SupplierVoiceModels.TryGetValue(key, out var v) ? v : new System.Collections.Generic.List<VoiceModel>();
+        public void SetSupplierVoiceModels(string key, System.Collections.Generic.List<VoiceModel> models) => SupplierVoiceModels[key] = models ?? new System.Collections.Generic.List<VoiceModel>();
+        public string GetSupplierDefaultVoiceModelId(string key) => SupplierDefaultVoiceModelId.TryGetValue(key, out var v) ? v : VoiceModel.NONE_MODEL_ID;
+        public void SetSupplierDefaultVoiceModelId(string key, string modelId)
+        {
+            string oldValue = GetSupplierDefaultVoiceModelId(key);
+            string newValue = string.IsNullOrEmpty(modelId) ? VoiceModel.NONE_MODEL_ID : modelId;
+            SupplierDefaultVoiceModelId[key] = newValue;
+            if (oldValue != newValue) PawnVoiceManager.OnDefaultVoiceChanged(newValue);
+        }
+        public int GetSupplierGenerateCooldown(string key) => SupplierGenerateCooldownMs.TryGetValue(key, out var v) ? v : DEFAULT_GENERATE_COOLDOWN_MS;
+        public void SetSupplierGenerateCooldown(string key, int ms) => SupplierGenerateCooldownMs[key] = ms;
+        public float GetSupplierVolume(string key) => SupplierVolume.TryGetValue(key, out var v) ? v : DEFAULT_SUPPLIER_VOLUME;
+        public void SetSupplierVolume(string key, float vol) => SupplierVolume[key] = vol;
+        public float GetSupplierTemperature(string key) => SupplierTemperature.TryGetValue(key, out var v) ? v : 0.9f;
+        public void SetSupplierTemperature(string key, float t) => SupplierTemperature[key] = t;
+        public float GetSupplierTopP(string key) => SupplierTopP.TryGetValue(key, out var v) ? v : 0.9f;
+        public void SetSupplierTopP(string key, float p) => SupplierTopP[key] = p;
+        public float GetSupplierSpeed(string key) => SupplierSpeed.TryGetValue(key, out var v) ? v : DEFAULT_SUPPLIER_SPEED;
+        public void SetSupplierSpeed(string key, float s) => SupplierSpeed[key] = s;
+        public bool GetSupplierAdvancedMode(string key) => SupplierAdvancedMode.TryGetValue(key, out var v) && v;
+        public void SetSupplierAdvancedMode(string key, bool enabled) => SupplierAdvancedMode[key] = enabled;
+        public System.Collections.Generic.List<VoiceAssignmentRule> GetSupplierVoiceRules(string key) => SupplierVoiceRules.TryGetValue(key, out var v) ? v : new System.Collections.Generic.List<VoiceAssignmentRule>();
+        public void SetSupplierVoiceRules(string key, System.Collections.Generic.List<VoiceAssignmentRule> rules)
+        {
+            SupplierVoiceRules[key] = rules ?? new System.Collections.Generic.List<VoiceAssignmentRule>();
+            PawnVoiceManager.OnRulesChanged();
+        }
+
+        /// <summary>Ensure all custom providers have their dictionary entries initialized.</summary>
+        public void EnsureCustomProviderDictionaries()
+        {
+            if (CustomProviders == null) return;
+            foreach (var cfg in CustomProviders)
+            {
+                if (cfg == null) continue;
+                InitializeCustomProviderDictionaries(cfg);
+            }
         }
     }
 }

@@ -90,6 +90,17 @@ namespace RimTalk.TTS.Service
                     return new Provider.EdgeTTSProvider();
                 case TTSSettings.TTSSupplier.GeminiTTS:
                     return new Provider.GeminiTTSProvider();
+                case TTSSettings.TTSSupplier.Custom:
+                    if (settings != null)
+                    {
+                        var customConfig = settings.GetCurrentCustomProvider();
+                        if (customConfig != null)
+                        {
+                            return new Provider.CustomTTSProvider(customConfig);
+                        }
+                        Log.Warning("[RimTalk.TTS] No custom provider selected");
+                    }
+                    return new Provider.NoneProvider();
                 case TTSSettings.TTSSupplier.None:
                 default:
                     return new Provider.NoneProvider();
@@ -130,6 +141,7 @@ namespace RimTalk.TTS.Service
 
             // Validate API key for selected supplier
             // EdgeTTS doesn't need API key - skip validation
+            // Custom providers handle their own validation
             if (settings.Supplier != TTSSettings.TTSSupplier.EdgeTTS)
             {
                 string apiKey = GetApiKeyForSupplier(settings.Supplier, settings);
@@ -283,7 +295,8 @@ namespace RimTalk.TTS.Service
             }
 
             int nowMilisecond = (int)TTSMod.AppStopwatch.Elapsed.TotalMilliseconds;
-            int cooldownMilisecond = settings.GetSupplierGenerateCooldown(settings.Supplier);
+            string supplierKey = settings.GetCurrentSupplierKey();
+            int cooldownMilisecond = settings.GetSupplierGenerateCooldown(supplierKey);
             int cooldownEndMilisecond = _waitingRequestCount * cooldownMilisecond + _lastGenerateTimeStampMilisecond;
 
             if (nowMilisecond < cooldownEndMilisecond)
@@ -303,17 +316,20 @@ namespace RimTalk.TTS.Service
         /// </summary>
         private static async Task<byte[]> GenerateSpeechAsync(string voiceModelId, string inputText, string instructText, TTSSettings settings)
         {
+            // Use GetCurrentSupplierKey for dictionary lookups (handles Custom suppliers)
+            string supplierKey = settings.GetCurrentSupplierKey();
+
             var ttsRequest = new Service.TTSRequest
             {
-                ApiKey = settings.GetSupplierApiKey(settings.Supplier),
-                Model = settings.GetSupplierModel(settings.Supplier),
+                ApiKey = settings.GetSupplierApiKey(supplierKey),
+                Model = settings.GetSupplierModel(supplierKey),
                 Input = inputText,
                 InstructText = instructText,
                 Voice = voiceModelId,
-                Speed = settings.GetSupplierSpeed(settings.Supplier),
-                Volume = settings.GetSupplierVolume(settings.Supplier),
-                Temperature = settings.GetSupplierTemperature(settings.Supplier),
-                TopP = settings.GetSupplierTopP(settings.Supplier)
+                Speed = settings.GetSupplierSpeed(supplierKey),
+                Volume = settings.GetSupplierVolume(supplierKey),
+                Temperature = settings.GetSupplierTemperature(supplierKey),
+                TopP = settings.GetSupplierTopP(supplierKey)
             };
 
             return await _provider.GenerateSpeechAsync(ttsRequest);
@@ -375,22 +391,30 @@ namespace RimTalk.TTS.Service
         private static string GetVoiceModelId(Pawn pawn, TTSSettings settings)
         {
             // Get pawn-specific voice model directly from PawnVoiceManager
+            string supplierKey = settings.GetCurrentSupplierKey();
             if (pawn != null)
             {
                 string voiceModel = Data.PawnVoiceManager.GetVoiceModel(pawn);
-                if (!string.IsNullOrEmpty(voiceModel) && settings.GetSupplierVoiceModels(settings.Supplier).Any(vm => vm.ModelId == voiceModel))
+                if (!string.IsNullOrEmpty(voiceModel) && settings.GetSupplierVoiceModels(supplierKey).Any(vm => vm.ModelId == voiceModel))
                 {
                     return voiceModel;
                 }
             }
 
             // Fallback to default voice model
-            return settings.GetSupplierDefaultVoiceModelId(settings.Supplier);
+            return settings.GetSupplierDefaultVoiceModelId(supplierKey);
         }
 
         private static string GetApiKeyForSupplier(TTSSettings.TTSSupplier supplier, TTSSettings settings)
         {
             if (settings == null) return string.Empty;
+
+            // For custom suppliers, use the supplier key
+            if (supplier == TTSSettings.TTSSupplier.Custom)
+            {
+                string key = settings.GetCurrentSupplierKey();
+                return settings.GetSupplierApiKey(key);
+            }
 
             // Prefer SupplierApiKeys dictionary if present
             return settings.GetSupplierApiKey(supplier);

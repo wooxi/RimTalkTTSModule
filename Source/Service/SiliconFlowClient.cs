@@ -99,7 +99,8 @@ namespace RimTalk.TTS.Service
                 using var req = new HttpRequestMessage(HttpMethod.Get, url);
                 req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
                 using var resp = await _http.SendAsync(req);
-                var respText = resp.Content != null ? await resp.Content.ReadAsStringAsync() : string.Empty;
+                var respBytes = resp.Content != null ? await resp.Content.ReadAsByteArrayAsync() : Array.Empty<byte>();
+                var respText = respBytes.Length > 0 ? Encoding.UTF8.GetString(respBytes) : string.Empty;
                 if (!resp.IsSuccessStatusCode)
                 {
                     Log.Warning($"[RimTalk.TTS] SiliconFlowClient.ListUserVoicesAsync: API returned {resp.StatusCode}: {respText}");
@@ -138,7 +139,8 @@ namespace RimTalk.TTS.Service
                 req.Content = new StringContent("{\"uri\":\"" + uri.Replace("\"","\\\"") + "\"}");
                 req.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 using var resp = await _http.SendAsync(req);
-                var respText = resp.Content != null ? await resp.Content.ReadAsStringAsync() : string.Empty;
+                var respBytes = resp.Content != null ? await resp.Content.ReadAsByteArrayAsync() : Array.Empty<byte>();
+                var respText = respBytes.Length > 0 ? Encoding.UTF8.GetString(respBytes) : string.Empty;
                 return true;
             }
             catch (Exception ex)
@@ -257,7 +259,8 @@ namespace RimTalk.TTS.Service
                 using var resp = await _http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                 if (!resp.IsSuccessStatusCode)
                 {
-                    string respText = resp.Content != null ? await resp.Content.ReadAsStringAsync() : string.Empty;
+                    var errBytes = resp.Content != null ? await resp.Content.ReadAsByteArrayAsync() : Array.Empty<byte>();
+                    string respText = errBytes.Length > 0 ? Encoding.UTF8.GetString(errBytes) : string.Empty;
                     Log.Warning($"[RimTalk.TTS] SiliconFlowClient: API returned {resp.StatusCode}: {respText}");
                     return null;
                 }

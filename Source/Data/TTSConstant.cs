@@ -180,6 +180,11 @@ namespace RimTalk.TTS.Data
             Available voices: Kore, Puck, Aoede, Enceladus, Charon, Fenrir, Leda, Callirrhoe, and 22 more.
             """;
 
+        public static readonly string DefaultTTSProcessingPrompt_Custom =
+            """
+            
+            """;
+
         /// <summary>
         /// Get the current TTS processing prompt from settings or fallback to default
         /// </summary>
