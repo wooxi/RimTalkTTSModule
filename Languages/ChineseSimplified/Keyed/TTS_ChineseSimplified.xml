@@ -112,9 +112,9 @@
     <RimTalk.Settings.TTS.TTSSupplier.FishAudio>Fish Audio</RimTalk.Settings.TTS.TTSSupplier.FishAudio>
     <RimTalk.Settings.TTS.TTSSupplier.CosyVoice>CosyVoice2</RimTalk.Settings.TTS.TTSSupplier.CosyVoice>
     <RimTalk.Settings.TTS.TTSSupplier.IndexTTS>IndexTTS2</RimTalk.Settings.TTS.TTSSupplier.IndexTTS>
-    <RimTalk.Settings.TTS.TTSSupplier.AzureTTS>AzureTTS（未完成）</RimTalk.Settings.TTS.TTSSupplier.AzureTTS>
+    <RimTalk.Settings.TTS.TTSSupplier.AzureTTS>AzureTTS（暂不可用）</RimTalk.Settings.TTS.TTSSupplier.AzureTTS>
     <RimTalk.Settings.TTS.TTSSupplier.EdgeTTS>EdgeTTS（免费）</RimTalk.Settings.TTS.TTSSupplier.EdgeTTS>
-    <RimTalk.Settings.TTS.TTSSupplier.GeminiTTS>GeminiTTS（未完成）</RimTalk.Settings.TTS.TTSSupplier.GeminiTTS>
+    <RimTalk.Settings.TTS.TTSSupplier.GeminiTTS>GeminiTTS（暂不可用）</RimTalk.Settings.TTS.TTSSupplier.GeminiTTS>
     <RimTalk.Settings.TTS.SpeedLabel>播放速度：{0}</RimTalk.Settings.TTS.SpeedLabel>
     <RimTalk.Settings.TTS.ModelLabel.CosyVoice>TTS 模型（CosyVoice）：{0}</RimTalk.Settings.TTS.ModelLabel.CosyVoice>
     <RimTalk.Settings.TTS.ModelLabel.IndexTTS>TTS 模型（IndexTTS）：{0}</RimTalk.Settings.TTS.ModelLabel.IndexTTS>
@@ -198,7 +198,7 @@
     <RimTalk.Settings.TTS.Rule.AgeLabel>年龄</RimTalk.Settings.TTS.Rule.AgeLabel>
 
     <!-- 自定义 TTS 供应商 -->
-    <RimTalk.Settings.TTS.CustomProvider.Section>自定义 TTS 供应商</RimTalk.Settings.TTS.CustomProvider.Section>
+    <RimTalk.Settings.TTS.CustomProvider.Section>自定义 TTS 供应商（未经测试！）</RimTalk.Settings.TTS.CustomProvider.Section>
     <RimTalk.Settings.TTS.CustomProvider.Description>添加兼容 OpenAI 格式的自定义 TTS 供应商。支持自定义 URL、认证方式、情感参数、温度参数及自定义请求格式。</RimTalk.Settings.TTS.CustomProvider.Description>
     <RimTalk.Settings.TTS.CustomProvider.NoProviders>尚未配置任何自定义供应商。点击"添加新供应商"来创建一个。</RimTalk.Settings.TTS.CustomProvider.NoProviders>
     <RimTalk.Settings.TTS.CustomProvider.AddNew>+ 添加新自定义供应商</RimTalk.Settings.TTS.CustomProvider.AddNew>
