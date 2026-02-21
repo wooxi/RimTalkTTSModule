@@ -73,7 +73,7 @@ namespace RimTalk.TTS.Patch
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"[RimTalk.TTS] Overlay_DrawSettingsDropdown_Postfix exception: {ex}");
+                    TTSLog.Error($"[RimTalk.TTS] Overlay_DrawSettingsDropdown_Postfix exception: {ex}");
                 }
             }
         }

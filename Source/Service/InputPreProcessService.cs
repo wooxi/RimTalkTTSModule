@@ -1,7 +1,6 @@
 using System.Text;
 using System.Threading.Tasks;
 using RimTalk.TTS.Data;
-using Verse;
 
 namespace RimTalk.TTS.Service
 {
@@ -17,7 +16,7 @@ namespace RimTalk.TTS.Service
         {
             if (settings == null)
             {
-                Log.Warning("[RimTalk.TTS] preprocess settings is null");
+                TTSLog.Warning("[RimTalk.TTS] preprocess settings is null");
                 return null;
             }
 
@@ -40,13 +39,13 @@ namespace RimTalk.TTS.Service
                 }
                 else
                 {
-                    Log.Warning("[RimTalk.TTS] Empty response from preprocess API");
+                    TTSLog.Warning("[RimTalk.TTS] Empty response from preprocess API");
                     return null;
                 }
             }
             catch (System.Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] preprocess failed - {ex.Message}");
+                TTSLog.Error($"[RimTalk.TTS] preprocess failed - {ex.Message}");
                 return null;
             }
         }

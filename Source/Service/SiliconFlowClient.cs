@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Verse;
 
 namespace RimTalk.TTS.Service
 {
@@ -77,7 +76,7 @@ namespace RimTalk.TTS.Service
             var respText = resp.Content != null ? await resp.Content.ReadAsStringAsync() : string.Empty;
             if (!resp.IsSuccessStatusCode)
             {
-                Log.Warning($"[RimTalk.TTS] SiliconFlowClient.UploadUserVoiceAsync: API returned {resp.StatusCode}: {respText}");
+                TTSLog.Warning($"[RimTalk.TTS] SiliconFlowClient.UploadUserVoiceAsync: API returned {resp.StatusCode}: {respText}");
                 return null;
             }
 
@@ -103,7 +102,7 @@ namespace RimTalk.TTS.Service
                 var respText = respBytes.Length > 0 ? Encoding.UTF8.GetString(respBytes) : string.Empty;
                 if (!resp.IsSuccessStatusCode)
                 {
-                    Log.Warning($"[RimTalk.TTS] SiliconFlowClient.ListUserVoicesAsync: API returned {resp.StatusCode}: {respText}");
+                    TTSLog.Warning($"[RimTalk.TTS] SiliconFlowClient.ListUserVoicesAsync: API returned {resp.StatusCode}: {respText}");
                     return result;
                 }
 
@@ -119,7 +118,7 @@ namespace RimTalk.TTS.Service
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] SiliconFlowClient.ListUserVoicesAsync exception: {ex.GetType().Name}: {ex.Message}");
+                TTSLog.Error($"[RimTalk.TTS] SiliconFlowClient.ListUserVoicesAsync exception: {ex.GetType().Name}: {ex.Message}");
                 return result;
             }
         }
@@ -145,7 +144,7 @@ namespace RimTalk.TTS.Service
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] SiliconFlowClient.DeleteUserVoiceAsync exception: {ex.GetType().Name}: {ex.Message}");
+                TTSLog.Error($"[RimTalk.TTS] SiliconFlowClient.DeleteUserVoiceAsync exception: {ex.GetType().Name}: {ex.Message}");
                 return false;
             }
         }
@@ -261,7 +260,7 @@ namespace RimTalk.TTS.Service
                 {
                     var errBytes = resp.Content != null ? await resp.Content.ReadAsByteArrayAsync() : Array.Empty<byte>();
                     string respText = errBytes.Length > 0 ? Encoding.UTF8.GetString(errBytes) : string.Empty;
-                    Log.Warning($"[RimTalk.TTS] SiliconFlowClient: API returned {resp.StatusCode}: {respText}");
+                    TTSLog.Warning($"[RimTalk.TTS] SiliconFlowClient: API returned {resp.StatusCode}: {respText}");
                     return null;
                 }
 
@@ -295,7 +294,7 @@ namespace RimTalk.TTS.Service
                     }
                     catch (Exception ex)
                     {
-                        Log.Warning($"[RimTalk.TTS] SiliconFlowClient: Failed to generate response preview: {ex.GetType().Name}: {ex.Message}");
+                        TTSLog.Warning($"[RimTalk.TTS] SiliconFlowClient: Failed to generate response preview: {ex.GetType().Name}: {ex.Message}");
                     }
 
                     // If MP3, attempt to convert to WAV so AudioPlaybackService can consume it.
@@ -329,13 +328,13 @@ namespace RimTalk.TTS.Service
                         }
                         catch (Exception ex)
                         {
-                            Log.Warning($"[RimTalk.TTS] SiliconFlowClient: Failed to convert MP3 to WAV: {ex.GetType().Name}: {ex.Message}. Returning raw bytes.");
+                            TTSLog.Warning($"[RimTalk.TTS] SiliconFlowClient: Failed to convert MP3 to WAV: {ex.GetType().Name}: {ex.Message}. Returning raw bytes.");
                             return bytes;
                         }
                     }
 
                     // Not MP3 or conversion failed - return raw bytes for other audio types
-                    Log.Warning($"[RimTalk.TTS] SiliconFlowClient: Received non-WAV audio with Content-Type '{mediaType}'. Returning raw bytes.");
+                    TTSLog.Warning($"[RimTalk.TTS] SiliconFlowClient: Received non-WAV audio with Content-Type '{mediaType}'. Returning raw bytes.");
                     return bytes;
                 }
 
@@ -343,13 +342,13 @@ namespace RimTalk.TTS.Service
                 string textPreview = bytes != null ? System.Text.Encoding.UTF8.GetString(bytes, 0, Math.Min(bytes.Length, 2048)) : "<null>";
                 if (mediaType == "application/json" || mediaType.StartsWith("text/") || textPreview.StartsWith("{") || textPreview.StartsWith("["))
                 {
-                    Log.Error($"[RimTalk.TTS] SiliconFlowClient: Expected WAV but server returned '{mediaType}'. Response body: {textPreview}");
+                    TTSLog.Error($"[RimTalk.TTS] SiliconFlowClient: Expected WAV but server returned '{mediaType}'. Response body: {textPreview}");
                     return null;
                 }
 
                 // Unknown non-audio response: log a binary preview and return null
                 string binPreview = bytes != null ? System.Text.Encoding.UTF8.GetString(bytes, 0, Math.Min(bytes.Length, 256)) : "<null>";
-                Log.Error($"[RimTalk.TTS] SiliconFlowClient: Unexpected non-audio response (Content-Type='{mediaType}'). Preview: {binPreview}");
+                TTSLog.Error($"[RimTalk.TTS] SiliconFlowClient: Unexpected non-audio response (Content-Type='{mediaType}'). Preview: {binPreview}");
                 return null;
             }
             catch (OperationCanceledException)
@@ -358,7 +357,7 @@ namespace RimTalk.TTS.Service
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] SiliconFlowClient exception: {ex.GetType().Name}: {ex.Message}");
+                TTSLog.Error($"[RimTalk.TTS] SiliconFlowClient exception: {ex.GetType().Name}: {ex.Message}");
                 return null;
             }
         }

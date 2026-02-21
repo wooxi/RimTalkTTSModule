@@ -473,17 +473,36 @@ namespace RimTalk.TTS.Data
         private void InitializeCustomProviderDictionaries(CustomProviderConfig config)
         {
             string key = config.GetSupplierKey();
-            if (!SupplierApiKeys.ContainsKey(key)) SupplierApiKeys[key] = config.ApiKey ?? "";
-            if (!SupplierModels.ContainsKey(key)) SupplierModels[key] = config.Model ?? "tts-1";
+            string defaultVoice = !string.IsNullOrWhiteSpace(config.DefaultVoice) ? config.DefaultVoice : "alloy";
+
+            // Always sync API key from config so editor changes take effect immediately
+            SupplierApiKeys[key] = config.ApiKey ?? "";
+            // Always sync model from config
+            SupplierModels[key] = config.Model ?? "tts-1";
+
             if (!SupplierGenerateCooldownMs.ContainsKey(key)) SupplierGenerateCooldownMs[key] = DEFAULT_GENERATE_COOLDOWN_MS;
             if (!SupplierVolume.ContainsKey(key)) SupplierVolume[key] = DEFAULT_SUPPLIER_VOLUME;
             if (!SupplierTemperature.ContainsKey(key)) SupplierTemperature[key] = 0.9f;
             if (!SupplierTopP.ContainsKey(key)) SupplierTopP[key] = 0.9f;
             if (!SupplierSpeed.ContainsKey(key)) SupplierSpeed[key] = DEFAULT_SUPPLIER_SPEED;
-            if (!SupplierVoiceModels.ContainsKey(key)) SupplierVoiceModels[key] = new System.Collections.Generic.List<VoiceModel>();
-            if (!SupplierDefaultVoiceModelId.ContainsKey(key)) SupplierDefaultVoiceModelId[key] = VoiceModel.NONE_MODEL_ID;
             if (!SupplierAdvancedMode.ContainsKey(key)) SupplierAdvancedMode[key] = false;
             if (!SupplierVoiceRules.ContainsKey(key)) SupplierVoiceRules[key] = new System.Collections.Generic.List<VoiceAssignmentRule>();
+
+            // Initialize voice model list with the default voice so pawns can use it immediately
+            if (!SupplierVoiceModels.ContainsKey(key) || SupplierVoiceModels[key] == null || SupplierVoiceModels[key].Count == 0)
+            {
+                var initialList = new System.Collections.Generic.List<VoiceModel>
+                {
+                    new VoiceModel(defaultVoice, defaultVoice)
+                };
+                SupplierVoiceModels[key] = initialList;
+            }
+
+            // Default voice model ID: use config.DefaultVoice instead of NONE so requests aren't blocked
+            if (!SupplierDefaultVoiceModelId.ContainsKey(key) || SupplierDefaultVoiceModelId[key] == VoiceModel.NONE_MODEL_ID)
+            {
+                SupplierDefaultVoiceModelId[key] = defaultVoice;
+            }
         }
 
         // ===== String-key overloads for custom supplier dictionary access =====

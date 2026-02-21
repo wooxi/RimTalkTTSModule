@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using RimTalk.TTS.Data;
 using RimTalk.TTS.Service;
-using Verse;
 
 namespace RimTalk.TTS.Provider
 {
@@ -19,7 +18,7 @@ namespace RimTalk.TTS.Provider
             _config = config;
             if (config != null)
             {
-                Log.Message($"[RimTalk.TTS] CustomTTSProvider initialized: {config.GetDisplayName()} ({config.GetFullUrl()})");
+                TTSLog.Message($"[RimTalk.TTS] CustomTTSProvider initialized: {config.GetDisplayName()} ({config.GetFullUrl()})");
             }
         }
 
@@ -29,7 +28,7 @@ namespace RimTalk.TTS.Provider
         {
             if (_config == null)
             {
-                Log.Error("[RimTalk.TTS] CustomTTSProvider: No config set");
+                TTSLog.Error("[RimTalk.TTS] CustomTTSProvider: No config set");
                 return null;
             }
 

@@ -82,7 +82,7 @@ namespace RimTalk.TTS.UI
                 {
                     // TTS turned OFF: stop all audio and clear state
                     AudioPlaybackService.StopAndClear();
-                    Log.Message("[RimTalk.TTS] TTS disabled via settings");
+                    TTSLog.Message("[RimTalk.TTS] TTS disabled via settings");
                     listing.End();
                     Widgets.EndScrollView();
                     return;
@@ -93,7 +93,7 @@ namespace RimTalk.TTS.UI
                     if (Find.CurrentMap != null)
                     {
                         TTSService.ReloadMap(Find.CurrentMap);
-                        Log.Message("[RimTalk.TTS] TTS enabled via settings, reloading map pawns");
+                        TTSLog.Message("[RimTalk.TTS] TTS enabled via settings, reloading map pawns");
                     }
                 }
             }

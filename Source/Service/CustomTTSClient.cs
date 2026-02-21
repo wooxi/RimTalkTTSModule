@@ -26,13 +26,13 @@ namespace RimTalk.TTS.Service
         {
             if (config == null)
             {
-                Log.Error("[RimTalk.TTS] CustomTTSClient: config is null");
+                TTSLog.Error("[RimTalk.TTS] CustomTTSClient: config is null");
                 return null;
             }
 
             if (string.IsNullOrWhiteSpace(config.BaseUrl))
             {
-                Log.Error("[RimTalk.TTS] CustomTTSClient: BaseUrl is empty");
+                TTSLog.Error("[RimTalk.TTS] CustomTTSClient: BaseUrl is empty");
                 return null;
             }
 
@@ -41,7 +41,7 @@ namespace RimTalk.TTS.Service
                 string url = config.GetFullUrl();
                 string jsonBody = BuildRequestBody(request, config);
 
-                Log.Message($"[RimTalk.TTS] CustomTTSClient: POST {url}");
+                TTSLog.Message($"[RimTalk.TTS] CustomTTSClient: POST {url} (voice={request.Voice}, model={request.Model})");
 
                 using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
                 httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
@@ -63,7 +63,7 @@ namespace RimTalk.TTS.Service
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorBody = await response.Content.ReadAsStringAsync();
-                    Log.Error($"[RimTalk.TTS] CustomTTSClient: HTTP {(int)response.StatusCode} - {errorBody}");
+                    TTSLog.Error($"[RimTalk.TTS] CustomTTSClient: HTTP {(int)response.StatusCode} {response.ReasonPhrase} - {errorBody}");
                     return null;
                 }
 
@@ -71,21 +71,30 @@ namespace RimTalk.TTS.Service
 
                 if (audioData == null || audioData.Length == 0)
                 {
-                    Log.Warning("[RimTalk.TTS] CustomTTSClient: Empty response from server");
+                    TTSLog.Warning("[RimTalk.TTS] CustomTTSClient: Empty response from server");
                     return null;
                 }
 
-                Log.Message($"[RimTalk.TTS] CustomTTSClient: Received {audioData.Length} bytes");
+                TTSLog.Message($"[RimTalk.TTS] CustomTTSClient: Received {audioData.Length} bytes");
                 return audioData;
             }
             catch (OperationCanceledException)
             {
-                Log.Warning("[RimTalk.TTS] CustomTTSClient: Request cancelled or timed out");
+                TTSLog.Warning("[RimTalk.TTS] CustomTTSClient: Request cancelled or timed out");
                 throw;
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] CustomTTSClient: {ex.GetType().Name}: {ex.Message}");
+                // Walk the full exception chain to reveal root cause (e.g. SSL, DNS, connection refused)
+                var sb = new System.Text.StringBuilder();
+                sb.Append($"{ex.GetType().Name}: {ex.Message}");
+                var inner = ex.InnerException;
+                while (inner != null)
+                {
+                    sb.Append($" --> {inner.GetType().Name}: {inner.Message}");
+                    inner = inner.InnerException;
+                }
+                TTSLog.Error($"[RimTalk.TTS] CustomTTSClient: {sb}");
                 return null;
             }
         }

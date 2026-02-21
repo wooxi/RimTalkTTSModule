@@ -48,32 +48,32 @@ namespace RimTalk.TTS.Service
         {
             if (settings == null)
             {
-                Log.Warning("[RimTalk.TTS] SimpleLLMClient: settings is null");
+                TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: settings is null");
                 return (null, false);
             }
 
             if (string.IsNullOrWhiteSpace(settings.ApiKey))
             {
-                Log.Warning("[RimTalk.TTS] SimpleLLMClient: API key not configured");
+                TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: API key not configured");
                 return (null, false);
             }
 
             if (string.IsNullOrWhiteSpace(settings.Model))
             {
-                Log.Warning("[RimTalk.TTS] SimpleLLMClient: Model not configured");
+                TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: Model not configured");
                 return (null, false);
             }
 
             if (string.IsNullOrWhiteSpace(prompt))
             {
-                Log.Warning("[RimTalk.TTS] Empty prompt provided to SimpleLLMClient");
+                TTSLog.Warning("[RimTalk.TTS] Empty prompt provided to SimpleLLMClient");
                 return (null, false);
             }
 
             string baseUrl = GetBaseUrl(settings);
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
-                Log.Warning("[RimTalk.TTS] SimpleLLMClient: Base URL is empty");
+                TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: Base URL is empty");
                 return (null, false);
             }
 
@@ -85,20 +85,20 @@ namespace RimTalk.TTS.Service
                 // Build simple OpenAI-compatible request with single user message
                 string jsonRequest = BuildRequest(prompt, text, settings.Model);
                 
-                Log.Message($"[RimTalk.TTS] Sending LLM request to {settings.ApiProvider}: {prompt}");
+                TTSLog.Message($"[RimTalk.TTS] Sending LLM request to {settings.ApiProvider}: {prompt}");
 
                 // Send HTTP request
                 var (responseJson, success) = await SendHttpRequestAsync(jsonRequest, baseUrl, settings.ApiKey);
 
                 if (!success)
                 {
-                    Log.Warning("[RimTalk.TTS] LLM HTTP request failed");
+                    TTSLog.Warning("[RimTalk.TTS] LLM HTTP request failed");
                     return (null, false);
                 }
 
                 if (string.IsNullOrEmpty(responseJson))
                 {
-                    Log.Warning("[RimTalk.TTS] LLM returned empty response");
+                    TTSLog.Warning("[RimTalk.TTS] LLM returned empty response");
                     return (null, false);
                 }
 
@@ -107,7 +107,7 @@ namespace RimTalk.TTS.Service
 
                 if (result == null)
                 {
-                    Log.Warning("[RimTalk.TTS] Failed to extract content from LLM response");
+                    TTSLog.Warning("[RimTalk.TTS] Failed to extract content from LLM response");
                     return (null, false);
                 }
 
@@ -115,7 +115,7 @@ namespace RimTalk.TTS.Service
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] SimpleLLMClient.QueryAsync error: {ex.Message}\n{ex.StackTrace}");
+                TTSLog.Error($"[RimTalk.TTS] SimpleLLMClient.QueryAsync error: {ex.Message}\n{ex.StackTrace}");
                 return (null, false);
             }
         }
@@ -196,18 +196,18 @@ namespace RimTalk.TTS.Service
                 // Check for errors
                 if (webRequest.result != UnityWebRequest.Result.Success)
                 {
-                    Log.Error($"[RimTalk.TTS] HTTP request failed: {webRequest.responseCode} {webRequest.error}");
-                    Log.Error($"[RimTalk.TTS] Response: {webRequest.downloadHandler?.text}");
+                    TTSLog.Error($"[RimTalk.TTS] HTTP request failed: {webRequest.responseCode} {webRequest.error}");
+                    TTSLog.Error($"[RimTalk.TTS] Response: {webRequest.downloadHandler?.text}");
                     return (null, false);
                 }
 
                 string responseText = webRequest.downloadHandler.text;
-                Log.Message($"[RimTalk.TTS] HTTP response received: {responseText}");
+                TTSLog.Message($"[RimTalk.TTS] HTTP response received: {responseText}");
                 return (responseText, true);
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] HTTP request error: {ex.Message}\n{ex.StackTrace}");
+                TTSLog.Error($"[RimTalk.TTS] HTTP request error: {ex.Message}\n{ex.StackTrace}");
                 return ("", false);
             }
         }
@@ -255,7 +255,7 @@ namespace RimTalk.TTS.Service
             }
             catch (Exception ex)
             {
-                Log.Error($"[RimTalk.TTS] Failed to parse JSON response: {ex.Message}");
+                TTSLog.Error($"[RimTalk.TTS] Failed to parse JSON response: {ex.Message}");
                 return null;
             }
         }
