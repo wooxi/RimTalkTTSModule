@@ -51,7 +51,7 @@ namespace RimTalk.TTS.Data
             }
 
             可用标注:
-            情感(emotion字段,仅选一个):Happy, Sad, Angry, Excited, Calm, Fearful, Disgusted, Confused
+            情感(emotion字段,仅选一个):Happy, Sad, Angry, Neutral
             语气/音效(可在text字段括号外添加):[breath], <strong></strong>, [noise], [laughter], [cough], [clucking], [accent], [quick_breath], <laughter></laughter>, [hissing], [sigh], [vocalized-noise], [lipsmack]
             """;
 
