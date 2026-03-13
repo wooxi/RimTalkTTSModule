@@ -65,6 +65,10 @@
     <!-- LLM API Settings -->
     <RimTalk.Settings.TTS.LLMApiConfig>Voice text pre-processing LLM API Configuration</RimTalk.Settings.TTS.LLMApiConfig>
     <RimTalk.Settings.TTS.ProviderLabel>API Provider:</RimTalk.Settings.TTS.ProviderLabel>
+    <RimTalk.Settings.TTS.ProviderSkip>Skip</RimTalk.Settings.TTS.ProviderSkip>
+    <RimTalk.Settings.TTS.ProviderSkipTooltip>Skip LLM preprocessing, send dialogue text directly to TTS provider</RimTalk.Settings.TTS.ProviderSkipTooltip>
+    <RimTalk.Settings.TTS.ProviderRimTalkSame>Same as RimTalk</RimTalk.Settings.TTS.ProviderRimTalkSame>
+    <RimTalk.Settings.TTS.ProviderRimTalkSameTooltip>Use the LLM provider already selected in RimTalk config for preprocessing</RimTalk.Settings.TTS.ProviderRimTalkSameTooltip>
     <RimTalk.Settings.TTS.CustomProvider>Custom</RimTalk.Settings.TTS.CustomProvider>
     <RimTalk.Settings.TTS.LLMModelLabel>Model:</RimTalk.Settings.TTS.LLMModelLabel>
     <RimTalk.Settings.TTS.LLMApiKeyLabel>API Key:</RimTalk.Settings.TTS.LLMApiKeyLabel>

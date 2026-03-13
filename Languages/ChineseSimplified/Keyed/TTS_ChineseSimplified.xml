@@ -65,6 +65,10 @@
     <!-- LLM API 设置 -->
     <RimTalk.Settings.TTS.LLMApiConfig>语音文本预处理 LLM API 配置</RimTalk.Settings.TTS.LLMApiConfig>
     <RimTalk.Settings.TTS.ProviderLabel>API 提供商：</RimTalk.Settings.TTS.ProviderLabel>
+    <RimTalk.Settings.TTS.ProviderSkip>跳过</RimTalk.Settings.TTS.ProviderSkip>
+    <RimTalk.Settings.TTS.ProviderSkipTooltip>不经过LLM预处理，将对话内容直接传输给TTS供应商</RimTalk.Settings.TTS.ProviderSkipTooltip>
+    <RimTalk.Settings.TTS.ProviderRimTalkSame>与RimTalk设置相同</RimTalk.Settings.TTS.ProviderRimTalkSame>
+    <RimTalk.Settings.TTS.ProviderRimTalkSameTooltip>使用RimTalk中已选择的LLM供应商进行预处理</RimTalk.Settings.TTS.ProviderRimTalkSameTooltip>
     <RimTalk.Settings.TTS.CustomProvider>自定义</RimTalk.Settings.TTS.CustomProvider>
     <RimTalk.Settings.TTS.LLMModelLabel>模型：</RimTalk.Settings.TTS.LLMModelLabel>
     <RimTalk.Settings.TTS.LLMApiKeyLabel>API 密钥：</RimTalk.Settings.TTS.LLMApiKeyLabel>

@@ -1047,11 +1047,19 @@ namespace RimTalk.TTS.UI
             Text.Font = GameFont.Medium;
             listing.Label("RimTalk.Settings.TTS.LLMApiConfig".Translate());
             Text.Font = GameFont.Small;
-            
+
             listing.Gap(6f);
 
             // Provider Selection
             listing.Label("RimTalk.Settings.TTS.ProviderLabel".Translate());
+            if (listing.RadioButton("RimTalk.Settings.TTS.ProviderSkip".Translate(), settings.ApiProvider == TTSApiProvider.Skip, tooltip: "RimTalk.Settings.TTS.ProviderSkipTooltip".Translate()))
+            {
+                settings.ApiProvider = TTSApiProvider.Skip;
+            }
+            if (listing.RadioButton("RimTalk.Settings.TTS.ProviderRimTalkSame".Translate(), settings.ApiProvider == TTSApiProvider.RimTalkSame, tooltip: "RimTalk.Settings.TTS.ProviderRimTalkSameTooltip".Translate()))
+            {
+                settings.ApiProvider = TTSApiProvider.RimTalkSame;
+            }
             if (listing.RadioButton("DeepSeek", settings.ApiProvider == TTSApiProvider.DeepSeek))
             {
                 settings.ApiProvider = TTSApiProvider.DeepSeek;
@@ -1065,31 +1073,38 @@ namespace RimTalk.TTS.UI
                 settings.ApiProvider = TTSApiProvider.Custom;
             }
 
-            listing.Gap(6f);
-
-            // Model
-            listing.Label("RimTalk.Settings.TTS.LLMModelLabel".Translate());
-            settings.Model = listing.TextEntry(settings.Model ?? "");
-
-            listing.Gap(6f);
-
-            // API Key
-            listing.Label("RimTalk.Settings.TTS.LLMApiKeyLabel".Translate());
-            settings.ApiKey = listing.TextEntry(settings.ApiKey ?? "");
-
-            listing.Gap(6f);
-
-            // Custom Base URL (only for Custom provider)
-            if (settings.ApiProvider == TTSApiProvider.Custom)
+            // Skip and RimTalkSame don't need Model/ApiKey/BaseUrl fields
+            if (settings.ApiProvider != TTSApiProvider.Skip && settings.ApiProvider != TTSApiProvider.RimTalkSame)
             {
-                listing.Label("RimTalk.Settings.TTS.CustomBaseUrlLabel".Translate());
-                settings.CustomBaseUrl = listing.TextEntry(settings.CustomBaseUrl ?? "");
+                listing.Gap(6f);
+
+                // Model
+                listing.Label("RimTalk.Settings.TTS.LLMModelLabel".Translate());
+                settings.Model = listing.TextEntry(settings.Model ?? "");
+
+                listing.Gap(6f);
+
+                // API Key
+                listing.Label("RimTalk.Settings.TTS.LLMApiKeyLabel".Translate());
+                settings.ApiKey = listing.TextEntry(settings.ApiKey ?? "");
+
+                listing.Gap(6f);
+
+                // Custom Base URL (only for Custom provider)
+                if (settings.ApiProvider == TTSApiProvider.Custom)
+                {
+                    listing.Label("RimTalk.Settings.TTS.CustomBaseUrlLabel".Translate());
+                    settings.CustomBaseUrl = listing.TextEntry(settings.CustomBaseUrl ?? "");
+                }
             }
 
             listing.Gap(6f);
 
-            // Remove brackets during preprocessing
-            listing.CheckboxLabeled("RimTalk.Settings.TTS.RemoveBracketsInPreProcess".Translate(), ref settings.RemoveBracketsInPreProcess, "RimTalk.Settings.TTS.RemoveBracketsInPreProcessTooltip".Translate());
+            // Remove brackets during preprocessing (not relevant for Skip)
+            if (settings.ApiProvider != TTSApiProvider.Skip)
+            {
+                listing.CheckboxLabeled("RimTalk.Settings.TTS.RemoveBracketsInPreProcess".Translate(), ref settings.RemoveBracketsInPreProcess, "RimTalk.Settings.TTS.RemoveBracketsInPreProcessTooltip".Translate());
+            }
         }
 
         private static string SupplierString(TTSSettings.TTSSupplier supplier)

@@ -42,6 +42,36 @@ namespace RimTalk.TTS.Service
         }
 
         /// <summary>
+        /// Resolve base URL from RimTalk's active AI config.
+        /// Google/Gemini uses OpenAI-compatible endpoint.
+        /// </summary>
+        private static string GetRimTalkBaseUrl(ApiConfig config)
+        {
+            if (config == null) return "";
+
+            switch (config.Provider)
+            {
+                case AIProvider.Google:
+                    // Use Gemini's OpenAI-compatible endpoint (full path since SendHttpRequestAsync expects it)
+                    return "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+                case AIProvider.Local:
+                case AIProvider.Custom:
+                    return config.BaseUrl ?? "";
+                default:
+                    // Standard providers: use their registered endpoint, strip /chat/completions suffix
+                    var endpointUrl = config.Provider.GetEndpointUrl();
+                    if (string.IsNullOrEmpty(endpointUrl)) return "";
+                    // The endpoint URLs in registry already include /v1/chat/completions;
+                    // we need just the base, since SendHttpRequestAsync appends the path
+                    int idx = endpointUrl.IndexOf("/v1/chat/completions");
+                    if (idx > 0) return endpointUrl.Substring(0, idx);
+                    idx = endpointUrl.IndexOf("/chat/completions");
+                    if (idx > 0) return endpointUrl.Substring(0, idx);
+                    return endpointUrl;
+            }
+        }
+
+        /// <summary>
         /// Send a simple text query and get text response (no role/conversation context)
         /// </summary>
         public static async Task<(PreProcessResult response, bool success)> QueryAsync(string prompt, string text, TTSSettings settings)
@@ -52,13 +82,42 @@ namespace RimTalk.TTS.Service
                 return (null, false);
             }
 
-            if (string.IsNullOrWhiteSpace(settings.ApiKey))
+            string baseUrl;
+            string apiKey;
+            string model;
+
+            if (settings.ApiProvider == TTSApiProvider.RimTalkSame)
+            {
+                // Resolve from RimTalk's active config
+                var rimTalkConfig = Settings.Get()?.GetActiveConfig();
+                if (rimTalkConfig == null)
+                {
+                    TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: RimTalk has no active API config");
+                    return (null, false);
+                }
+
+                baseUrl = GetRimTalkBaseUrl(rimTalkConfig);
+                apiKey = rimTalkConfig.ApiKey;
+                model = rimTalkConfig.SelectedModel == "Custom"
+                    ? rimTalkConfig.CustomModelName
+                    : rimTalkConfig.SelectedModel;
+
+                TTSLog.Message($"[RimTalk.TTS] Using RimTalk config: provider={rimTalkConfig.Provider}, model={model}");
+            }
+            else
+            {
+                baseUrl = GetBaseUrl(settings);
+                apiKey = settings.ApiKey;
+                model = settings.Model;
+            }
+
+            if (string.IsNullOrWhiteSpace(apiKey))
             {
                 TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: API key not configured");
                 return (null, false);
             }
 
-            if (string.IsNullOrWhiteSpace(settings.Model))
+            if (string.IsNullOrWhiteSpace(model))
             {
                 TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: Model not configured");
                 return (null, false);
@@ -70,7 +129,6 @@ namespace RimTalk.TTS.Service
                 return (null, false);
             }
 
-            string baseUrl = GetBaseUrl(settings);
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
                 TTSLog.Warning("[RimTalk.TTS] SimpleLLMClient: Base URL is empty");
@@ -81,14 +139,14 @@ namespace RimTalk.TTS.Service
             {
                 if (settings.RemoveBracketsInPreProcess)
                     text = RemoveBrackets(text);
-                
+
                 // Build simple OpenAI-compatible request with single user message
-                string jsonRequest = BuildRequest(prompt, text, settings.Model);
-                
+                string jsonRequest = BuildRequest(prompt, text, model);
+
                 TTSLog.Message($"[RimTalk.TTS] Sending LLM request to {settings.ApiProvider}: {prompt}");
 
                 // Send HTTP request
-                var (responseJson, success) = await SendHttpRequestAsync(jsonRequest, baseUrl, settings.ApiKey);
+                var (responseJson, success) = await SendHttpRequestAsync(jsonRequest, baseUrl, apiKey);
 
                 if (!success)
                 {
@@ -156,7 +214,7 @@ namespace RimTalk.TTS.Service
             // OpenAI-compatible endpoint format
             baseUrl = baseUrl?.Trim().TrimEnd('/');
             string endpoint;
-            if (baseUrl.Contains("/v1/chat/completions"))
+            if (baseUrl.Contains("/chat/completions"))
             {
                 endpoint = baseUrl;
             }

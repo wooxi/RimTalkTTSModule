@@ -266,14 +266,21 @@ namespace RimTalk.TTS.Service
         /// </summary>
         private static async Task<string> ProcessTextAsync(string text, Pawn pawn, Guid dialogueId, TTSSettings settings)
         {
+            // Skip preprocessing entirely if provider is set to Skip
+            if (settings.ApiProvider == Data.TTSApiProvider.Skip)
+            {
+                TTSLog.Message($"[RimTalk.TTS] Preprocess skipped [{dialogueId.ToString().Substring(0, 8)}]: passing raw text to TTS");
+                return text;
+            }
+
             // Get effective language for this pawn (pawn-specific or global fallback)
             string language = Data.PawnVoiceManager.GetEffectiveLanguage(pawn, settings);
             TTSLog.Message($"[RimTalk.TTS] Preprocess [{dialogueId.ToString().Substring(0, 8)}]: language={language ?? "(null)"}, inputLen={text?.Length}");
-            
+
             if (!string.IsNullOrWhiteSpace(language))
             {
                 var preProcessResult = await InputPreProcessService.PreProcessAsync(text, language, settings);
-                
+
                 if (preProcessResult != null && !string.IsNullOrEmpty(preProcessResult.Text))
                 {
                     return preProcessResult.Text;
