@@ -66,7 +66,7 @@ namespace RimTalk.TTS.Data
         // Remove bracketed content during preprocessing
         public bool RemoveBracketsInPreProcess = false;
         
-        public string TTSModel = "s1"; // fishaudio-1 (v1.6) or s1 (default)//Deprecated
+        public string TTSModel = "s2-pro"; // fishaudio-1 (v1.6) or s1 (default)//Deprecated
         public float TTSTemperature = 0.9f; // TTS generation temperature (0.7-1.0)//Deprecated
         public float TTSTopP = 0.9f; // TTS generation top_p (0.7-1.0)//Deprecated
         public float TTSSpeed = 1.0f; // TTS playback speed (0.25-4.0)//Deprecated
@@ -117,7 +117,7 @@ namespace RimTalk.TTS.Data
             Scribe_Values.Look(ref TTSTranslationLanguage, "ttsTranslationLanguage", "");
             Scribe_Values.Look(ref DefaultVoiceModelId, "defaultVoiceModelId", "");
             Scribe_Values.Look(ref CustomTTSProcessingPrompt, "customTTSProcessingPrompt", "");
-            Scribe_Values.Look(ref TTSModel, "ttsModel", "s1");
+            Scribe_Values.Look(ref TTSModel, "ttsModel", "s2-pro");
             Scribe_Values.Look(ref TTSTemperature, "ttsTemperature", 0.9f);
             Scribe_Values.Look(ref TTSTopP, "ttsTopP", 0.9f);
             Scribe_Values.Look(ref TTSVolume, "ttsVolume", DEFAULT_SUPPLIER_VOLUME);
@@ -158,7 +158,7 @@ namespace RimTalk.TTS.Data
         {
             // Initialize dictionaries if null (backwards compatibility)
             InitializeDictionaryIfNull(ref SupplierApiKeys, (s) => s == TTSSupplier.FishAudio ? (FishAudioApiKey ?? "") : "");
-            InitializeDictionaryIfNull(ref SupplierModels, (s) => s == TTSSupplier.FishAudio ? (TTSModel ?? "s1") : "");
+            InitializeDictionaryIfNull(ref SupplierModels, (s) => s == TTSSupplier.FishAudio ? (TTSModel ?? "s2-pro") : "");
             InitializeDictionaryIfNull(ref SupplierGenerateCooldownMs, (s) => s == TTSSupplier.FishAudio ? GenerateCooldownMiliSeconds : DEFAULT_GENERATE_COOLDOWN_MS);
             InitializeDictionaryIfNull(ref SupplierVolume, (s) => s == TTSSupplier.FishAudio ? TTSVolume : DEFAULT_SUPPLIER_VOLUME);
             InitializeDictionaryIfNull(ref SupplierTemperature, (s) => s == TTSSupplier.FishAudio ? TTSTemperature : 0.9f);

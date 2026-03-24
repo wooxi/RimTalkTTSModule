@@ -34,6 +34,26 @@ namespace RimTalk.TTS.Data
             Audio effects: [laughing], [chuckling], [sobbing], [crying loudly], [sighing], [groaning], [panting], [gasping], [yawning], [snoring]
             Pauses: [break], [long-break]
             """;
+        public static readonly string DefaultTTSProcessingPrompt_FishAudioS2 =
+            """
+            You are a professional TTS text processor.
+
+            Rules:
+            1. Translate all text into {language}.
+            2. For text inside parentheses: translate only the content, keep parentheses, do not add annotations.
+            3. For text outside parentheses: translate and add suitable annotations.
+            - Emotions: at the start of a sentence, separated by a space.
+            - Tone markers, audio effects: anywhere in the sentence.
+            - Replace ellipses (...) with [break] or [long-break].
+            4. Never add annotations inside parentheses.
+            5. Output only JSON:
+            {
+                "text": "<fully translated to {language} and annotated text, all parentheses and their translated content preserved>",
+                "emotion": "<empty string>"
+            }
+
+            Annotation example: [happily] Whoa, what a fine day! [embarassed][cough violently] Wait...wait! [extremely surprised] Why are you here?! [sigh] Never mind. Oh, I remember that [laugh][calmly] sorry [exhale]. Give me the...[gasp] Ouch! [angrily] Watch it!
+            """;
         
         public static readonly string DefaultTTSProcessingPrompt_CosyVoice =
             """

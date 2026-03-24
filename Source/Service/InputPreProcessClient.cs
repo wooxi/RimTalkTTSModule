@@ -205,7 +205,11 @@ namespace RimTalk.TTS.Service
       ""content"": ""{escapedText}""
     }}
   ],
-  ""response_format"":{{""type"":""json_object""}} 
+  ""temperature"": 0.65,
+  ""top_p"": 0.9,
+  ""response_format"": {{
+    ""type"": ""json_object""
+  }}
 }}";
         }
 

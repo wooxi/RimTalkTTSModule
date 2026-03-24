@@ -231,6 +231,10 @@ namespace RimTalk.TTS.UI
                     {
                         settings.SetSupplierModel(supplierKey, "s1");
                     }
+                    if (listing.RadioButton("RimTalk.Settings.TTS.ModelS2Pro".Translate(), currentModel == "s2-pro"))
+                    {
+                        settings.SetSupplierModel(supplierKey, "s2-pro");
+                    }
                 }
 
                 // CosyVoice model selection
@@ -431,14 +435,21 @@ namespace RimTalk.TTS.UI
             Rect resetButtonsRect1 = listing.GetRect(30f);
             float gap = 4f;
             float btnW = (resetButtonsRect1.width - gap * 2) / 3f;
-            Rect fishRect = new Rect(resetButtonsRect1.x, resetButtonsRect1.y, btnW, resetButtonsRect1.height);
+            Rect fishRectOld = new Rect(resetButtonsRect1.x, resetButtonsRect1.y, btnW/2, resetButtonsRect1.height);
+            Rect fishRectS2 = new Rect(resetButtonsRect1.x+btnW/2, resetButtonsRect1.y, btnW/2, resetButtonsRect1.height);
             Rect cosyRect = new Rect(resetButtonsRect1.x + btnW + gap, resetButtonsRect1.y, btnW, resetButtonsRect1.height);
             Rect indexRect = new Rect(resetButtonsRect1.x + (btnW + gap) * 2f, resetButtonsRect1.y, btnW, resetButtonsRect1.height);
 
-            if (Widgets.ButtonText(fishRect, "RimTalk.Settings.TTS.ResetPrompt.FishAudio".Translate()))
+            if (Widgets.ButtonText(fishRectOld, "RimTalk.Settings.TTS.ResetPrompt.FishAudioOld".Translate()))
             {
                 settings.CustomTTSProcessingPrompt = "";
                 processingPromptBuffer = Data.TTSConstant.DefaultTTSProcessingPrompt;
+            }
+
+            if (Widgets.ButtonText(fishRectS2, "RimTalk.Settings.TTS.ResetPrompt.FishAudioS2".Translate()))
+            {
+                settings.CustomTTSProcessingPrompt = "";
+                processingPromptBuffer = Data.TTSConstant.DefaultTTSProcessingPrompt_FishAudioS2;
             }
 
             if (Widgets.ButtonText(cosyRect, "RimTalk.Settings.TTS.ResetPrompt.CosyVoice".Translate()))
