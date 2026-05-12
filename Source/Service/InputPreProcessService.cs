@@ -1,6 +1,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using RimTalk.TTS.Data;
+using Verse;
 
 namespace RimTalk.TTS.Service
 {
@@ -60,7 +61,7 @@ namespace RimTalk.TTS.Service
                         , @"\s+", " "
                     ).Trim();
 
-            if (TTSConfig.CurrentSupplier == TTSSettings.TTSSupplier.FishAudio)
+            if (TTSConfig.CurrentSupplier == TTSSettings.TTSSupplier.FishAudio && TTSConfig.Settings.SupplierModels[TTSSettings.TTSSupplier.FishAudio.ToString()] != "s2-pro")
             {
                 text = text.Replace("[","(").Replace("]",")");
             }
