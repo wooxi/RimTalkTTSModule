@@ -73,6 +73,8 @@ namespace RimTalk.TTS.Data
 
         public bool ButtonDisplay = true;
 
+        public bool ControlButtonDisplay = true;
+
         public bool isOnButton = true;
         
         // Generate cooldown (seconds) and queue behavior

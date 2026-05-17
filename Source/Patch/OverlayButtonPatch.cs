@@ -35,6 +35,7 @@ namespace RimTalk.TTS.Patch
                 {
                     if (__instance == null) return;
                     if (!TTSConfig.IsEnabled) return;
+                    if (!TTSConfig.Settings.ControlButtonDisplay) return;
 
                     var overlayType = __instance.GetType();
 

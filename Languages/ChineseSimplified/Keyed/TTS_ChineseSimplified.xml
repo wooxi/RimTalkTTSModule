@@ -9,6 +9,8 @@
     <RimTalk.Settings.TTS.EnableTooltip>对话显示时自动转换为语音。</RimTalk.Settings.TTS.EnableTooltip>
     <RimTalk.Settings.TTS.ButtonEnable>启用 快捷开关</RimTalk.Settings.TTS.ButtonEnable>
     <RimTalk.Settings.TTS.ButtonEnableTooltip>在游戏界面显示快捷语音开关，它的设置不会保存。若TTS模块未启用则不生效。</RimTalk.Settings.TTS.ButtonEnableTooltip>
+    <RimTalk.Settings.TTS.ControlButtonEnable>启用 对话生成控制开关</RimTalk.Settings.TTS.ControlButtonEnable>
+    <RimTalk.Settings.TTS.ControlButtonEnableTooltip>在rimtalk窗口中显示对话控制开关，不会随rimtalk窗口隐藏而关闭。</RimTalk.Settings.TTS.ControlButtonEnableTooltip>
     <RimTalk.TTS.OnOffUpdated>语音生成已{0}</RimTalk.TTS.OnOffUpdated>
     <RimTalk.TTS.On>开启</RimTalk.TTS.On>
     <RimTalk.TTS.Off>关闭</RimTalk.TTS.Off>

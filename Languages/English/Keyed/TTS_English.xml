@@ -9,6 +9,8 @@
     <RimTalk.Settings.TTS.EnableTooltip>Automatically converts dialogue to speech when displayed.</RimTalk.Settings.TTS.EnableTooltip>
     <RimTalk.Settings.TTS.ButtonEnable>Enable on-off button</RimTalk.Settings.TTS.ButtonEnable>
     <RimTalk.Settings.TTS.ButtonEnableTooltip>Enable a toggle button on in-game UI, its setting won't be saved. Ignored when TTS is disabled.</RimTalk.Settings.TTS.ButtonEnableTooltip>
+    <RimTalk.Settings.TTS.ControlButtonEnable>Enable generation controller button</RimTalk.Settings.TTS.ControlButtonEnable>
+    <RimTalk.Settings.TTS.ControlButtonEnableTooltip>Enable Rimtalk generation controller button displayed on Rimtalk window. Will not be hidden when Rimtalk window is hidden.</RimTalk.Settings.TTS.ControlButtonEnableTooltip>
     <RimTalk.TTS.OnOffUpdated>Text to Speech Module {0}</RimTalk.TTS.OnOffUpdated>
     <RimTalk.TTS.On>turned on</RimTalk.TTS.On>
     <RimTalk.TTS.Off>turned off</RimTalk.TTS.Off>

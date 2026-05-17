@@ -104,6 +104,10 @@ namespace RimTalk.TTS.UI
 
             listing.Gap();
 
+            listing.CheckboxLabeled("RimTalk.Settings.TTS.ControlButtonEnable".Translate(), ref settings.ControlButtonDisplay, "RimTalk.Settings.TTS.ControlButtonEnableTooltip".Translate());
+
+            listing.Gap();
+
             // LLM API Configuration Section
             DrawApiConfigSection(listing, settings);
 
