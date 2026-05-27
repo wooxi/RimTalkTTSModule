@@ -126,6 +126,7 @@ namespace RimTalk.TTS.Data
             Scribe_Values.Look(ref TTSSpeed, "ttsSpeed", DEFAULT_SUPPLIER_SPEED);
             Scribe_Values.Look(ref GenerateCooldownMiliSeconds, "generateCooldownMiliSeconds", DEFAULT_GENERATE_COOLDOWN_MS);
             Scribe_Values.Look(ref ButtonDisplay, "buttonDisplay", true);
+            Scribe_Values.Look(ref ControlButtonDisplay, "controlButtonDisplay", true);
             Scribe_Values.Look<TTSSupplier>(ref _supplier, "ttsSupplier", TTSSupplier.None);
             Scribe_Collections.Look(ref SupplierApiKeys, "supplierApiKeys", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref SupplierModels, "supplierModels", LookMode.Value, LookMode.Value);
