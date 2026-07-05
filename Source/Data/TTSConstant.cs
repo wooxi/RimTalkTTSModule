@@ -34,6 +34,26 @@ namespace RimTalk.TTS.Data
             Audio effects: [laughing], [chuckling], [sobbing], [crying loudly], [sighing], [groaning], [panting], [gasping], [yawning], [snoring]
             Pauses: [break], [long-break]
             """;
+        public static readonly string DefaultTTSProcessingPrompt_FishAudioS2 =
+            """
+            You are a professional TTS text processor.
+
+            Rules:
+            1. Translate all text into {language}.
+            2. For text inside parentheses: translate only the content, keep parentheses, do not add annotations.
+            3. For text outside parentheses: translate and add suitable annotations.
+            - Emotions: at the start of a sentence, separated by a space.
+            - Tone markers, audio effects: anywhere in the sentence.
+            - Replace ellipses (...) with [break] or [long-break].
+            4. Never add annotations inside parentheses.
+            5. Output only JSON:
+            {
+                "text": "<fully translated to {language} and annotated text, all parentheses and their translated content preserved>",
+                "emotion": "<empty string>"
+            }
+
+            Annotation example: [happily] Whoa, what a fine day! [embarassed][cough violently] Wait...wait! [extremely surprised] Why are you here?! [sigh] Never mind. Oh, I remember that [laugh][calmly] sorry [exhale]. Give me the...[gasp] Ouch! [angrily] Watch it!
+            """;
         
         public static readonly string DefaultTTSProcessingPrompt_CosyVoice =
             """
@@ -51,7 +71,7 @@ namespace RimTalk.TTS.Data
             }
 
             可用标注:
-            情感(emotion字段,仅选一个):Happy, Sad, Angry, Excited, Calm, Fearful, Disgusted, Confused
+            情感(emotion字段,仅选一个):Happy, Sad, Angry, Neutral
             语气/音效(可在text字段括号外添加):[breath], <strong></strong>, [noise], [laughter], [cough], [clucking], [accent], [quick_breath], <laughter></laughter>, [hissing], [sigh], [vocalized-noise], [lipsmack]
             """;
 
@@ -180,20 +200,40 @@ namespace RimTalk.TTS.Data
             Available voices: Kore, Puck, Aoede, Enceladus, Charon, Fenrir, Leda, Callirrhoe, and 22 more.
             """;
 
-        public static readonly string DefaultTTSProcessingPrompt_TTSWebUI =
+        public static readonly string DefaultTTSProcessingPrompt_MiMo =
             """
-            You are a professional TTS text processor for TTS-WebUI.
+            You are a professional TTS text processor for Xiaomi MiMo Text-to-Speech.
 
             Rules:
             1. Translate all text into {language}.
-            2. For text inside parentheses: translate only the content, keep parentheses.
-            3. For text outside parentheses: translate and optionally add natural pauses.
-            4. Use "..." for natural pauses between sentences or thoughts.
+            2. For text inside parentheses: translate only the content, keep parentheses, do not add annotations.
+            3. For text outside parentheses: translate and add natural language style directives.
+            4. Never add directives inside parentheses.
             5. Output only JSON:
             {
-                "text": "<fully translated to {language}, all parentheses and their translated content preserved>",
+                "text": "<fully translated to {language} with style directives, all parentheses and their translated content preserved>",
                 "emotion": "<empty string>"
             }
+
+            MiMo TTS uses natural language control for speaking style. The text you output will be spoken by a TTS model that understands style instructions embedded in the text.
+            You can add style instructions at the beginning of the text using parentheses-like descriptions.
+
+            Examples of style instructions:
+            - Bright, bouncy, slightly sing-song tone
+            - Deep and gravelly, like a noir detective
+            - Warm and gentle, like a mother talking to her child
+            - Fast-paced, excited, barely containing joy
+            - Slow, deliberate, with heavy sarcasm
+            - Whispering, as if sharing a secret
+            - Cold and authoritative, like a military commander
+            - Sad and tired, voice cracking with emotion
+
+            Write the style instruction at the start of the text when needed, followed by the actual content.
+            """;
+
+        public static readonly string DefaultTTSProcessingPrompt_Custom =
+            """
+            
             """;
 
         /// <summary>
