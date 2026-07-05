@@ -268,10 +268,10 @@ namespace RimTalk.TTS.Service
         /// </summary>
         private static async Task<string> ProcessTextAsync(string text, Pawn pawn, Guid dialogueId, TTSSettings settings)
         {
-            // Skip preprocessing entirely if provider is set to Skip
-            if (settings.ApiProvider == Data.TTSApiProvider.Skip)
+            // Skip preprocessing entirely if provider is set to Skip or RimTalkSame
+            if (settings.ApiProvider == Data.TTSApiProvider.Skip || settings.ApiProvider == Data.TTSApiProvider.RimTalkSame)
             {
-                TTSLog.Message($"[RimTalk.TTS] Preprocess skipped [{dialogueId.ToString().Substring(0, 8)}]: passing raw text to TTS");
+                TTSLog.Message($"[RimTalk.TTS] Preprocess skipped ({settings.ApiProvider}) [{dialogueId.ToString().Substring(0, 8)}]: passing raw text to TTS");
                 return text;
             }
 

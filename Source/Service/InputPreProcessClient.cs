@@ -37,6 +37,8 @@ namespace RimTalk.TTS.Service
                 TTSApiProvider.DeepSeek => "https://api.deepseek.com",
                 TTSApiProvider.OpenAI => "https://api.openai.com",
                 TTSApiProvider.Custom => settings.CustomBaseUrl,
+                TTSApiProvider.Skip => "",
+                TTSApiProvider.RimTalkSame => "",
                 _ => ""
             };
         }

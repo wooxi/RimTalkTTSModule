@@ -32,15 +32,22 @@ namespace RimTalk.TTS.Service
 
                 // Call SimpleLLMClient directly with settings
                 var (response, success) = await InputPreProcessClient.QueryAsync(prompt, text, settings);
+
+                if (!success || response == null)
+                {
+                    Log.Warning("[RimTalk.TTS] Empty response from preprocess API");
+                    return null;
+                }
+
                 response.Text = CleanText(response.Text);
 
-                if (success && !string.IsNullOrEmpty(response.Text))
+                if (!string.IsNullOrEmpty(response.Text))
                 {
                     return response;
                 }
                 else
                 {
-                    Log.Warning("[RimTalk.TTS] Empty response from preprocess API");
+                    Log.Warning("[RimTalk.TTS] Empty text after preprocessing");
                     return null;
                 }
             }
